@@ -7,8 +7,10 @@ pkgname=('spl-utils' 'spl-dkms' 'zfs-utils' 'zfs-dkms')
 pkgver=0.6.2
 pkgrel=1
 arch=('i686' 'x86_64')
+groups=('zfsonlinux')
+makedepends=('dkms')
 url='http://zfsonlinux.org/'
-groups=('archzfs')
+license=('GPL2')
 source=(http://archive.zfsonlinux.org/downloads/zfsonlinux/spl/spl-${pkgver}.tar.gz
         http://archive.zfsonlinux.org/downloads/zfsonlinux/zfs/zfs-${pkgver}.tar.gz
         shrinker.patch
@@ -22,7 +24,7 @@ source=(http://archive.zfsonlinux.org/downloads/zfsonlinux/spl/spl-${pkgver}.tar
 sha256sums=('3c577c7055d6c73179726b9c8a7fd48f9122be0b345c50cd54732e801165daa4'
             '6b8cd79486b3a51204fac07297b8c45aa8702b8dfade58f2098b5734517065a1'
             '596f5bc1ef30e27a214bfd4962f8d3ed319cd7b4fe9f46b73d8d91d36c22b9e3'
-            'c943966808a7cace46824740db4fb1bdff10c5ce08304417fb35a407994a1dbb'
+            'aa5f3fd025c05078067acf01cbad82af322b4b8542d2d1c6a9103338eff6729d'
             'bb72fcab2fdb88aeba7c8d059a8f27fd2d32730f3d824d9303ca71f967bc2464'
             '15e742477fad0104871fc055b6ce9bf803540070e47fa515ea7ca3c1a401f831'
             '1ea6d2cdd27798680a96c9ebf18e9167b0575d032c7cfc731f16456cd38f2040'
@@ -61,7 +63,7 @@ build() {
 
 package_spl-utils() {
   pkgdesc='Solaris Porting Layer kernel module support files.'
-  license=('GPL')
+  license=('GPL2')
   depends=("spl-dkms=${pkgver}")
   install=spl-utils.install
 
@@ -71,7 +73,7 @@ package_spl-utils() {
 
 package_spl-dkms() {
   pkgdesc='Solaris Porting Layer kernel modules.'
-  license=('GPL')
+  license=('GPL2')
   depends=('dkms')
   install=spl-dkms.install
 
@@ -117,7 +119,7 @@ package_zfs-utils() {
 package_zfs-dkms() {
   pkgdesc="Kernel modules for the Zettabyte File System."
   license=('CDDL')
-  depends=("spl-dkms=${pkgver}")
+  depends=('dkms' "spl-dkms=${pkgver}")
   install=zfs-dkms.install
 
   cd "${srcdir}/zfs-${pkgver}"
