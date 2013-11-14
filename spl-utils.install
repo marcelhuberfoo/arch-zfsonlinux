@@ -1,0 +1,3 @@
+post_install() {
+  test -r /etc/hostid || hostid >/etc/hostid
+}
