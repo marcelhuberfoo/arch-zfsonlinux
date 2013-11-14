@@ -3,24 +3,26 @@
 # Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
 
 pkgbase=zfsonlinux
-pkgname=('spl-utils' 'spl-dkms' 'zfs-utils' 'zfs-dkms')
+pkgname=('spl-utilities' 'spl-kmod-dkms' 'zfs-utilities' 'zfs-kmod-dkms')
 pkgver=0.6.2
 pkgrel=1
 arch=('i686' 'x86_64')
 groups=('zfsonlinux')
 makedepends=('dkms')
+provides=('zfs' 'spl')
+conflicts=('zfs' 'spl')
 url='http://zfsonlinux.org/'
 license=('GPL2')
 source=(http://archive.zfsonlinux.org/downloads/zfsonlinux/spl/spl-${pkgver}.tar.gz
         http://archive.zfsonlinux.org/downloads/zfsonlinux/zfs/zfs-${pkgver}.tar.gz
         shrinker.patch
-        spl-utils.install
-        spl-dkms.install
-        zfs-utils.bash-completion
-        zfs-utils.initcpio.install
-        zfs-utils.initcpio.hook
-        zfs-utils.service
-	zfs-dkms.install)
+        spl-utilities.install
+        spl-kmod-dkms.install
+        zfs-utilities.bash-completion
+        zfs-utilities.initcpio.install
+        zfs-utilities.initcpio.hook
+        zfs-utilities.service
+        zfs-kmod-dkms.install)
 sha256sums=('3c577c7055d6c73179726b9c8a7fd48f9122be0b345c50cd54732e801165daa4'
             '6b8cd79486b3a51204fac07297b8c45aa8702b8dfade58f2098b5734517065a1'
             '596f5bc1ef30e27a214bfd4962f8d3ed319cd7b4fe9f46b73d8d91d36c22b9e3'
@@ -61,21 +63,12 @@ build() {
   make
 }
 
-package_spl-utils() {
-  pkgdesc='Solaris Porting Layer kernel module support files.'
-  license=('GPL2')
-  depends=("spl-dkms=${pkgver}")
-  install=spl-utils.install
-
-  cd "${srcdir}/spl-${pkgver}"
-  make DESTDIR="${pkgdir}" install
-}
-
-package_spl-dkms() {
+package_spl-kmod-dkms() {
   pkgdesc='Solaris Porting Layer kernel modules.'
   license=('GPL2')
   depends=('dkms')
-  install=spl-dkms.install
+  conflicts=('spl-dkms' 'spl-dkms-therp')
+  install=spl-kmod-dkms.install
 
   cd "${srcdir}/spl-${pkgver}"
 
@@ -89,11 +82,42 @@ package_spl-dkms() {
   cp -a "${srcdir}/spl-${pkgver}/" "${pkgdir}/usr/src/"
 }
 
-package_zfs-utils() {
+package_spl-utilities() {
+  pkgdesc='Solaris Porting Layer test utility.'
+  license=('GPL2')
+  depends=("spl-kmod-dkms=${pkgver}")
+  conflicts=('spl-utils' 'spl-utils-therp')
+  install=spl-utilities.install
+
+  cd "${srcdir}/spl-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+}
+
+package_zfs-kmod-dkms() {
+  pkgdesc="Kernel modules for the Zettabyte File System."
+  license=('CDDL')
+  depends=('dkms' "spl-kmod-dkms=${pkgver}")
+  conflicts=('zfs-dkms' 'zfs-dkms-therp')
+  install=zfs-kmod-dkms.install
+
+  cd "${srcdir}/zfs-${pkgver}"
+
+  # cleanup source tree
+  make distclean
+
+  ./autogen.sh
+  scripts/dkms.mkconf -v ${pkgver} -f dkms.conf -n zfs
+
+  install -d "${pkgdir}/usr/src/zfs-${pkgver}"
+  cp -a "${srcdir}/zfs-${pkgver}/" "${pkgdir}/usr/src/"
+}
+
+package_zfs-utilities() {
   pkgdesc="Zettabyte File System management utilities."
   license=('CDDL')
-  depends=("zfs-dkms=${pkgver}")
-  optdepends=("spl-utils=${pkgver}")
+  depends=("zfs-kmod-dkms=${pkgver}")
+  optdepends=("spl-utilities=${pkgver}: for executing spl tests")
+  conflicts=('zfs-utils' 'zfs-utils-therp')
 
   cd "${srcdir}/zfs-${pkgver}"
   make DESTDIR="${pkgdir}" install
@@ -110,27 +134,9 @@ package_zfs-utils() {
   mv "${pkgdir}/sbin/mount.zfs" "${pkgdir}/usr/bin/"
   rm -r "${pkgdir}/sbin"
 
-  install -D -m644 "${srcdir}/zfs-utils.initcpio.hook" "${pkgdir}/usr/lib/initcpio/hooks/zfs"
-  install -D -m644 "${srcdir}/zfs-utils.initcpio.install" "${pkgdir}/usr/lib/initcpio/install/zfs"
-  install -D -m644 "${srcdir}/zfs-utils.service" "${pkgdir}/usr/lib/systemd/system/zfs.service"
-  install -D -m644 "${srcdir}/zfs-utils.bash-completion" "${pkgdir}/usr/share/bash-completion/completions/zfs"
-}
-
-package_zfs-dkms() {
-  pkgdesc="Kernel modules for the Zettabyte File System."
-  license=('CDDL')
-  depends=('dkms' "spl-dkms=${pkgver}")
-  install=zfs-dkms.install
-
-  cd "${srcdir}/zfs-${pkgver}"
-
-  # cleanup source tree
-  make distclean
-
-  ./autogen.sh
-  scripts/dkms.mkconf -v ${pkgver} -f dkms.conf -n zfs
-
-  install -d "${pkgdir}/usr/src/zfs-${pkgver}"
-  cp -a "${srcdir}/zfs-${pkgver}/" "${pkgdir}/usr/src/"
+  install -D -m644 "${srcdir}/zfs-utilities.initcpio.hook" "${pkgdir}/usr/lib/initcpio/hooks/zfs"
+  install -D -m644 "${srcdir}/zfs-utilities.initcpio.install" "${pkgdir}/usr/lib/initcpio/install/zfs"
+  install -D -m644 "${srcdir}/zfs-utilities.service" "${pkgdir}/usr/lib/systemd/system/zfs.service"
+  install -D -m644 "${srcdir}/zfs-utilities.bash-completion" "${pkgdir}/usr/share/bash-completion/completions/zfs"
 }
 
