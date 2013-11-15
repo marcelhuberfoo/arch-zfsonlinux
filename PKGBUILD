@@ -44,8 +44,18 @@ build() {
   cd "${srcdir}/spl-${pkgver}"
 
   ./autogen.sh
-  ./configure --prefix=/usr --libdir=/usr/lib --sbindir=/usr/bin \
-              --with-config=user
+  if [ $CARCH = 'i686' ]; then
+    ./configure --prefix=/usr \
+                --libdir=/usr/lib \
+                --sbindir=/usr/bin \
+                --with-config=user \
+                --enable-atomic-spinlocks
+  elif [ $CARCH = 'x86_64' ]; then
+    ./configure --prefix=/usr \
+                --libdir=/usr/lib \
+                --sbindir=/usr/bin \
+                --with-config=user
+  fi
   make
 
   ## building zfs
@@ -140,3 +150,4 @@ package_zfs-utilities() {
   install -D -m644 "${srcdir}/zfs-utilities.bash-completion" "${pkgdir}/usr/share/bash-completion/completions/zfs"
 }
 
+# vim:set ts=2 sw=2 et:
