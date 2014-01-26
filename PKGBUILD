@@ -2,7 +2,7 @@
 # Contributor: Jesus Alvarez <jeezusjr at gmail dot com>
 # Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
 
-pkgbase=zfsonlinux
+pkgbase=zfsonlinux-dkms
 pkgname=('spl-utilities' 'spl-kmod-dkms' 'zfs-utilities' 'zfs-kmod-dkms')
 pkgver=0.6.2
 pkgrel=1
@@ -12,7 +12,7 @@ makedepends=('dkms')
 provides=('zfs' 'spl')
 conflicts=('zfs' 'spl')
 url='http://zfsonlinux.org/'
-license=('GPL2')
+license=('GPL2' 'CDDL')
 source=(http://archive.zfsonlinux.org/downloads/zfsonlinux/spl/spl-${pkgver}.tar.gz
         http://archive.zfsonlinux.org/downloads/zfsonlinux/zfs/zfs-${pkgver}.tar.gz
         shrinker.patch
