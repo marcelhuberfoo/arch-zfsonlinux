@@ -18,7 +18,7 @@ source=("$pkgname"::'git+git://github.com/zfsonlinux/spl.git'
         spl-kmod-dkms.install
         sysconfig.spl)
 sha256sums=('SKIP'
-            'fdece449014576256cb51a5d4ffef012ef67b71cc5d72746970ea0f76573ca7b'
+            'bb72fcab2fdb88aeba7c8d059a8f27fd2d32730f3d824d9303ca71f967bc2464'
             '94f46fb7ab0708b18e0d0c7d6d1bd1f8e2401bdc12373d15b0acc486cd56c8e4')
 install=spl-kmod-dkms.install
 backup=(etc/sysconfig/spl)

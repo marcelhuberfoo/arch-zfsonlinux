@@ -12,7 +12,7 @@ makedepends=('gcc' 'make' 'autoconf' 'automake' 'git')
 depends=("zfs-kmod-dkms-git=$pkgver")
 #optdepends=("spl-utilities=$_pkgverspl: for splat")
 provides=('zfs')
-conflicts=('zfs-utils' 'zfs-utils-therp' ''zfs-utils-therp-git' 'zfs-utilities')
+conflicts=('zfs-utils' 'zfs-utils-therp' 'zfs-utils-therp-git' 'zfs-utilities')
 url='http://zfsonlinux.org/'
 license=('CDDL')
 source=("$pkgname"::'git+git://github.com/zfsonlinux/zfs.git'
@@ -29,9 +29,9 @@ sha256sums=('SKIP'
 pkgver() {
   cd "$srcdir/$pkgname"
   if GITTAG="$(git describe --abbrev=0 --tags 2>/dev/null)"; then
-    echo "$(sed -e "s/^${pkgname%%-git}//" -e 's/^[-_/a-zA-Z]\+//' -e 's/[_-+]/./g' <<< ${GITTAG}).r$(git rev-list --count ${GITTAG}..).g$(git log -1 --format="%h")"
+    echo $(sed -e s/^${pkgname%%-git}// -e 's/^[-_/a-zA-Z]\+//' -e 's/[_-+]/./g' <<< ${GITTAG}).r$(git rev-list --count ${GITTAG}..).g$(git log -1 --format=%h)
   else
-    echo "0.r$(git rev-list --count master).g$(git log -1 --format="%h")"
+    echo 0.r$(git rev-list --count master).g$(git log -1 --format=%h)
   fi
 }
 
