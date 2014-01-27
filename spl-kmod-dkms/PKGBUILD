@@ -1,0 +1,57 @@
+# Maintainer: Marcel Huber <marcelhuberfoo at gmail dot com>
+# Contributor: Jesus Alvarez <jeezusjr at gmail dot com>
+# Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
+
+pkgname=spl-kmod-dkms-git
+pkgver=0.6.2.r23.g4c99541
+pkgrel=1
+pkgdesc='Solaris Porting Layer kernel modules.'
+arch=('i686' 'x86_64')
+groups=('zfsonlinux')
+makedepends=('gcc' 'make' 'autoconf' 'automake' 'git')
+depends=('dkms')
+provides=('spl')
+conflicts=('spl-dkms' 'spl-dkms-therp')
+url='http://zfsonlinux.org/'
+license=('GPL2')
+source=("$pkgname"::'git+git://github.com/zfsonlinux/spl.git'
+        spl-kmod-dkms.install
+        sysconfig.spl)
+sha256sums=('SKIP'
+            'fdece449014576256cb51a5d4ffef012ef67b71cc5d72746970ea0f76573ca7b'
+            '94f46fb7ab0708b18e0d0c7d6d1bd1f8e2401bdc12373d15b0acc486cd56c8e4')
+install=spl-kmod-dkms.install
+backup=(etc/sysconfig/spl)
+
+pkgver() {
+  cd "$srcdir/$pkgname"
+  if GITTAG="$(git describe --abbrev=0 --tags 2>/dev/null)"; then
+    echo "$(sed -e "s/^${pkgname%%-git}//" -e 's/^[-_/a-zA-Z]\+//' -e 's/[_-+]/./g' <<< ${GITTAG}).r$(git rev-list --count ${GITTAG}..).g$(git log -1 --format="%h")"
+  else
+    echo "0.r$(git rev-list --count master).g$(git log -1 --format="%h")"
+  fi
+}
+
+prepare() {
+  cd "$srcdir/$pkgname"
+}
+
+build() {
+  cd "$srcdir/$pkgname"
+  ./autogen.sh
+  ./configure --prefix=/usr \
+              --libdir=/usr/lib \
+              --sbindir=/usr/bin \
+              --with-config=user
+  scripts/dkms.mkconf -v $pkgver -f dkms.conf -n spl
+}
+
+package() {
+  cd "$srcdir/$pkgname"
+  install -d "$pkgdir/usr/src/spl-${pkgver}"
+  install -D -m0644 sysconfig.spl $pkgdir/etc/sysconfig/spl
+  cp -a -T "$srcdir/$pkgname/" "$pkgdir/usr/src/spl-${pkgver}"
+  rm -rf "$pkgdir/usr/src/spl-${pkgver}/.git"
+}
+
+# vim:set ts=2 sw=2 et:

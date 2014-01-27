@@ -1,0 +1,51 @@
+# Maintainer: Marcel Huber <marcelhuberfoo at gmail dot com>
+# Contributor: Jesus Alvarez <jeezusjr at gmail dot com>
+# Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
+
+pkgname=spl-utilities-git
+pkgver=0.6.2.r23.g4c99541
+pkgrel=1
+pkgdesc='Solaris Porting Layer splat utility.'
+arch=('i686' 'x86_64')
+groups=('zfsonlinux')
+makedepends=('gcc' 'make' 'autoconf' 'automake' 'git')
+depends=("spl-kmod-dkms-git=$pkgver")
+provides=('spl')
+conflicts=('spl-utils' 'spl-utils-therp')
+url='http://zfsonlinux.org/'
+license=('GPL2')
+source=("$pkgname"::'git+git://github.com/zfsonlinux/spl.git'
+        spl-utilities.install)
+sha256sums=('SKIP'
+            'aa5f3fd025c05078067acf01cbad82af322b4b8542d2d1c6a9103338eff6729d')
+install=spl-utilities.install
+
+pkgver() {
+  cd "$srcdir/$pkgname"
+  if GITTAG="$(git describe --abbrev=0 --tags 2>/dev/null)"; then
+    echo "$(sed -e "s/^${pkgname%%-git}//" -e 's/^[-_/a-zA-Z]\+//' -e 's/[_-+]/./g' <<< ${GITTAG}).r$(git rev-list --count ${GITTAG}..).g$(git log -1 --format="%h")"
+  else
+    echo "0.r$(git rev-list --count master).g$(git log -1 --format="%h")"
+  fi
+}
+
+prepare() {
+  cd "$srcdir/$pkgname"
+}
+
+build() {
+  cd "$srcdir/$pkgname"
+  ./autogen.sh
+  ./configure --prefix=/usr \
+              --libdir=/usr/lib \
+              --sbindir=/usr/bin \
+              --with-config=user
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname"
+  make DESTDIR="$pkgdir" install
+}
+
+# vim:set ts=2 sw=2 et:
