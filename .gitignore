@@ -2,3 +2,5 @@ pkg/
 src/
 *-git/
 *.tar.xz
+zfs/
+spl/

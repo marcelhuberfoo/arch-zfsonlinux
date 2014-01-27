@@ -4,20 +4,23 @@
 
 pkgname=zfs-kmod-dkms-git
 pkgver=0.6.2.r167.g01b738f
+_pkgverspl=0.6.2.r23.g4c99541
 pkgrel=1
 pkgdesc="Kernel modules for the Zettabyte File System."
 arch=('i686' 'x86_64')
 groups=('zfsonlinux')
 makedepends=('gcc' 'make' 'autoconf' 'automake' 'git')
-depends=('dkms' "spl-kmod-dkms-git")
+depends=('dkms' "spl-kmod-dkms-git=$_pkgverspl")
 provides=('zfs')
 conflicts=('zfs-dkms' 'zfs-dkms-therp')
 url='http://zfsonlinux.org/'
 license=('CDDL')
 source=("$pkgname"::'git+git://github.com/zfsonlinux/zfs.git'
+        'git+git://github.com/zfsonlinux/spl.git'
         zfs-kmod-dkms.install
         sysconfig.zfs)
 sha256sums=('SKIP'
+            'SKIP'
             '07dbd4765f2efae16b1a7781ed10edddc1d8112ad87b7cd17b6cc9736efb14de'
             '97588da65a841b22a82494ed53a69d24584e46ab764eed9892a83496df9b2555')
 install=zfs-kmod-dkms.install
@@ -25,10 +28,27 @@ backup=(etc/sysconfig/zfs)
 
 pkgver() {
   cd "$srcdir/$pkgname"
+  local dummy=$(pkgver_spl)
   if GITTAG="$(git describe --abbrev=0 --tags 2>/dev/null)"; then
-    echo "$(sed -e "s/^${pkgname%%-git}//" -e 's/^[-_/a-zA-Z]\+//' -e 's/[_-+]/./g' <<< ${GITTAG}).r$(git rev-list --count ${GITTAG}..).g$(git log -1 --format="%h")"
+    echo $(sed -e "s/^${pkgname%%-git}//" -e 's/^[-_/a-zA-Z]\+//' -e 's/[_-+]/./g' <<< ${GITTAG}).r$(git rev-list --count ${GITTAG}..).g$(git log -1 --format="%h")
   else
     echo "0.r$(git rev-list --count master).g$(git log -1 --format="%h")"
+  fi
+}
+
+pkgver_spl() {
+  cd "$srcdir/spl"
+  local _splver=""
+  if GITTAG="$(git describe --abbrev=0 --tags 2>/dev/null)"; then
+    _splver="$(echo $(sed -e 's/^spl//' -e 's/^[-_/a-zA-Z]\+//' -e 's/[_-+]/./g' <<< ${GITTAG}).r$(git rev-list --count ${GITTAG}..).g$(git log -1 --format=%h) )"
+  else
+    _splver="$(echo 0.r$(git rev-list --count master).g$(git log -1 --format=\"%h\") )"
+  fi
+  # code copied over from makepkg
+  if [[ -n $_splver && $_splver != "$_pkgverspl" ]]; then
+    if [[ -f $BUILDFILE && -w $BUILDFILE ]]; then
+      sed --follow-symlinks -i "s/^_pkgverspl=[^ ]*/_pkgverspl=$_splver/" "$BUILDFILE"
+    fi
   fi
 }
 
