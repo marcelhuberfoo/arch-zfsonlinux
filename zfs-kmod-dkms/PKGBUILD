@@ -69,6 +69,7 @@ build() {
               --libexecdir=/usr/lib/zfs-${pkgver} \
               --with-config=user
   scripts/dkms.mkconf -v $pkgver -f dkms.conf -n zfs
+  ## modify dkms.conf, duplicate PACKAGE_VERSION to PACKAGE_VERSION_SPL and replace in with-spl lines
 }
 
 package() {
