@@ -1,0 +1,86 @@
+# Maintainer: Marcel Huber <marcelhuberfoo at gmail dot com>
+# Contributor: Jesus Alvarez <jeezusjr at gmail dot com>
+# Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
+
+pkgname=zfs-kmod-dkms-git
+pkgver=0.6.2
+pkgrel=1
+pkgdesc="Kernel modules for the Zettabyte File System."
+arch=('i686' 'x86_64')
+groups=('zfsonlinux')
+makedepends=('gcc' 'make' 'autoconf' 'automake' 'git')
+depends=('dkms' "spl-kmod-dkms-git")
+provides=('zfs')
+conflicts=('zfs-dkms' 'zfs-dkms-therp')
+url='http://zfsonlinux.org/'
+license=('CDDL')
+source=("$pkgname"::'git+git://github.com/zfsonlinux/zfs.git'
+        zfs-kmod-dkms.install)
+sha256sums=('3c577c7055d6c73179726b9c8a7fd48f9122be0b345c50cd54732e801165daa4'
+            '07dbd4765f2efae16b1a7781ed10edddc1d8112ad87b7cd17b6cc9736efb14de')
+install=zfs-kmod-dkms.install
+
+pkgver() {
+  cd "$srcdir/$pkgname"
+  if GITTAG="$(git describe --abbrev=0 --tags 2>/dev/null)"; then
+    echo "$(sed -e "s/^${pkgname%%-git}//" -e 's/^[-_/a-zA-Z]\+//' -e 's/[_-+]/./g' <<< ${GITTAG}).r$(git rev-list --count ${GITTAG}..).g$(git log -1 --format="%h")"
+  else
+    echo "0.r$(git rev-list --count master).g$(git log -1 --format="%h")"
+  fi
+}
+
+prepare() {
+  cd "$srcdir/$pkgname"
+}
+
+build() {
+  cd "$srcdir/$pkgname"
+  ./autogen.sh
+  ./configure --prefix=/usr \
+              --sysconfdir=/etc \
+              --sbindir=/usr/bin \
+              --libdir=/usr/lib \
+              --datadir=/usr/share \
+              --includedir=/usr/include \
+              --with-udevdir=/lib/udev \
+              --libexecdir=/usr/lib/zfs-${pkgver} \
+              --with-config=user
+  scripts/dkms.mkconf -v $pkgver -f dkms.conf -n zfs
+}
+
+package() {
+  cd "$srcdir/$pkgname"
+  install -d "$pkgdir/usr/src/zfs-${pkgver}"
+  cp -a -T "$srcdir/$pkgname/" "$pkgdir/usr/src/zfs-${pkgver}"
+  rm -rf "$pkgdir/usr/src/zfs-${pkgver}/.git"
+}
+
+package_zfs-utilities() {
+  pkgdesc="Zettabyte File System management utilities."
+  license=('CDDL')
+  depends=("zfs-kmod-dkms=${pkgver}")
+  optdepends=("spl-utilities=${pkgver}: for executing spl tests")
+  conflicts=('zfs-utils' 'zfs-utils-therp')
+
+  cd "${srcdir}/zfs-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+
+  # Remove uneeded files
+  rm -r "${pkgdir}/etc/init.d"
+  rm -r "${pkgdir}/usr/lib/dracut"
+
+  # move module tree /lib -> /usr/lib
+  cp -r "${pkgdir}"/{lib,usr}
+  rm -r "${pkgdir}/lib"
+
+  # Fixup path
+  mv "${pkgdir}/sbin/mount.zfs" "${pkgdir}/usr/bin/"
+  rm -r "${pkgdir}/sbin"
+
+  install -D -m644 "${srcdir}/zfs-utilities.initcpio.hook" "${pkgdir}/usr/lib/initcpio/hooks/zfs"
+  install -D -m644 "${srcdir}/zfs-utilities.initcpio.install" "${pkgdir}/usr/lib/initcpio/install/zfs"
+  install -D -m644 "${srcdir}/zfs-utilities.service" "${pkgdir}/usr/lib/systemd/system/zfs.service"
+  install -D -m644 "${srcdir}/zfs-utilities.bash-completion" "${pkgdir}/usr/share/bash-completion/completions/zfs"
+}
+
+# vim:set ts=2 sw=2 et:

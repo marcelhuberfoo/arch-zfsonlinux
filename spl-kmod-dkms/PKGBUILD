@@ -49,7 +49,7 @@ build() {
 package() {
   cd "$srcdir/$pkgname"
   install -d "$pkgdir/usr/src/spl-${pkgver}"
-  install -D -m0644 sysconfig.spl $pkgdir/etc/sysconfig/spl
+  install -D -m0644 "$srcdir/sysconfig.spl" "$pkgdir/etc/sysconfig/spl"
   cp -a -T "$srcdir/$pkgname/" "$pkgdir/usr/src/spl-${pkgver}"
   rm -rf "$pkgdir/usr/src/spl-${pkgver}/.git"
 }
