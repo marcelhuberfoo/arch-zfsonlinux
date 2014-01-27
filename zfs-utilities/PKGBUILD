@@ -12,7 +12,7 @@ makedepends=('gcc' 'make' 'autoconf' 'automake' 'git')
 depends=("zfs-kmod-dkms-git=$pkgver")
 #optdepends=("spl-utilities=$_pkgverspl: for splat")
 provides=('zfs')
-conflicts=('zfs-utils' 'zfs-utils-therp')
+conflicts=('zfs-utils' 'zfs-utils-therp' ''zfs-utils-therp-git' 'zfs-utilities')
 url='http://zfsonlinux.org/'
 license=('CDDL')
 source=("$pkgname"::'git+git://github.com/zfsonlinux/zfs.git'
