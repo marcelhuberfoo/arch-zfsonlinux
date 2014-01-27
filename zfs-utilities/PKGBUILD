@@ -2,23 +2,29 @@
 # Contributor: Jesus Alvarez <jeezusjr at gmail dot com>
 # Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
 
-pkgname=zfs-kmod-dkms-git
-pkgver=0.6.2
+pkgname=zfs-utilities-git
+pkgver=0.6.2.r167.g01b738f
 pkgrel=1
-pkgdesc="Kernel modules for the Zettabyte File System."
+pkgdesc="Zettabyte File System management utilities."
 arch=('i686' 'x86_64')
 groups=('zfsonlinux')
 makedepends=('gcc' 'make' 'autoconf' 'automake' 'git')
-depends=('dkms' "spl-kmod-dkms-git")
+depends=("zfs-kmod-dkms-git=$pkgver")
+#optdepends=("spl-utilities=$_pkgverspl: for splat")
 provides=('zfs')
-conflicts=('zfs-dkms' 'zfs-dkms-therp')
+conflicts=('zfs-utils' 'zfs-utils-therp')
 url='http://zfsonlinux.org/'
 license=('CDDL')
 source=("$pkgname"::'git+git://github.com/zfsonlinux/zfs.git'
-        zfs-kmod-dkms.install)
-sha256sums=('3c577c7055d6c73179726b9c8a7fd48f9122be0b345c50cd54732e801165daa4'
-            '07dbd4765f2efae16b1a7781ed10edddc1d8112ad87b7cd17b6cc9736efb14de')
-install=zfs-kmod-dkms.install
+        zfs-utilities.bash-completion
+        zfs-utilities.initcpio.install
+        zfs-utilities.initcpio.hook
+        zfs-utilities.service)
+sha256sums=('SKIP'
+            '15e742477fad0104871fc055b6ce9bf803540070e47fa515ea7ca3c1a401f831'
+            '1ea6d2cdd27798680a96c9ebf18e9167b0575d032c7cfc731f16456cd38f2040'
+            'ab63abbd7fd8cb0a8293651947fda82a1b41d420cbb8e6c71c0fd3884ab43030'
+            'fd0abaf09de5e472cca449439def43f1dbbd13f1c5f4bd0d233f59563de1637a')
 
 pkgver() {
   cd "$srcdir/$pkgname"
@@ -45,24 +51,11 @@ build() {
               --with-udevdir=/lib/udev \
               --libexecdir=/usr/lib/zfs-${pkgver} \
               --with-config=user
-  scripts/dkms.mkconf -v $pkgver -f dkms.conf -n zfs
+  make
 }
 
 package() {
   cd "$srcdir/$pkgname"
-  install -d "$pkgdir/usr/src/zfs-${pkgver}"
-  cp -a -T "$srcdir/$pkgname/" "$pkgdir/usr/src/zfs-${pkgver}"
-  rm -rf "$pkgdir/usr/src/zfs-${pkgver}/.git"
-}
-
-package_zfs-utilities() {
-  pkgdesc="Zettabyte File System management utilities."
-  license=('CDDL')
-  depends=("zfs-kmod-dkms=${pkgver}")
-  optdepends=("spl-utilities=${pkgver}: for executing spl tests")
-  conflicts=('zfs-utils' 'zfs-utils-therp')
-
-  cd "${srcdir}/zfs-${pkgver}"
   make DESTDIR="${pkgdir}" install
 
   # Remove uneeded files
