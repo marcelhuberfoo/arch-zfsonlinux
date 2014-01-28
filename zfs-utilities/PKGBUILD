@@ -4,23 +4,26 @@
 
 pkgname=zfs-utilities-git
 pkgver=0.6.2.r167.g01b738f
+_pkgverspl=0.6.2.r23.g4c99541
 pkgrel=1
 pkgdesc="Zettabyte File System management utilities."
 arch=('i686' 'x86_64')
 groups=('zfsonlinux')
 makedepends=('gcc' 'make' 'autoconf' 'automake' 'git')
 depends=("zfs-kmod-dkms-git=$pkgver")
-#optdepends=("spl-utilities=$_pkgverspl: for splat")
+optdepends=("spl-utilities=$_pkgverspl: for splat support")
 provides=('zfs')
 conflicts=('zfs-utils' 'zfs-utils-therp' 'zfs-utils-therp-git' 'zfs-utilities')
 url='http://zfsonlinux.org/'
 license=('CDDL')
 source=("$pkgname"::'git+git://github.com/zfsonlinux/zfs.git'
+        'git+git://github.com/zfsonlinux/spl.git'
         zfs-utilities.bash-completion
         zfs-utilities.initcpio.install
         zfs-utilities.initcpio.hook
         zfs-utilities.service)
 sha256sums=('SKIP'
+            'SKIP'
             '15e742477fad0104871fc055b6ce9bf803540070e47fa515ea7ca3c1a401f831'
             '1ea6d2cdd27798680a96c9ebf18e9167b0575d032c7cfc731f16456cd38f2040'
             'ab63abbd7fd8cb0a8293651947fda82a1b41d420cbb8e6c71c0fd3884ab43030'
@@ -28,10 +31,27 @@ sha256sums=('SKIP'
 
 pkgver() {
   cd "$srcdir/$pkgname"
+  local dummy=$(pkgver_spl)
   if GITTAG="$(git describe --abbrev=0 --tags 2>/dev/null)"; then
     echo $(sed -e s/^${pkgname%%-git}// -e 's/^[-_/a-zA-Z]\+//' -e 's/[_-+]/./g' <<< ${GITTAG}).r$(git rev-list --count ${GITTAG}..).g$(git log -1 --format=%h)
   else
     echo 0.r$(git rev-list --count master).g$(git log -1 --format=%h)
+  fi
+}
+
+pkgver_spl() {
+  cd "$srcdir/spl"
+  local _splver=""
+  if GITTAG="$(git describe --abbrev=0 --tags 2>/dev/null)"; then
+    _splver="$(echo $(sed -e 's/^spl//' -e 's/^[-_/a-zA-Z]\+//' -e 's/[_-+]/./g' <<< ${GITTAG}).r$(git rev-list --count ${GITTAG}..).g$(git log -1 --format=%h) )"
+  else
+    _splver="$(echo 0.r$(git rev-list --count master).g$(git log -1 --format=\"%h\") )"
+  fi
+  # code copied over from makepkg
+  if [[ -n $_splver && $_splver != "$_pkgverspl" ]]; then
+    if [[ -f $BUILDFILE && -w $BUILDFILE ]]; then
+      sed --follow-symlinks -i "s/^_pkgverspl=[^ ]*/_pkgverspl=$_splver/" "$BUILDFILE"
+    fi
   fi
 }
 
