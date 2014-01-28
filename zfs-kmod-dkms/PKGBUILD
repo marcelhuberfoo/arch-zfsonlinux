@@ -6,17 +6,17 @@ pkgname=zfs-kmod-dkms-git
 pkgver=0.6.2.r167.g01b738f
 _pkgverspl=0.6.2.r23.g4c99541
 pkgrel=1
-pkgdesc="Kernel modules for the Zettabyte File System."
-arch=('i686' 'x86_64')
-groups=('zfsonlinux')
-makedepends=('gcc' 'make' 'autoconf' 'automake' 'git')
-depends=('dkms' "spl-kmod-dkms-git=$_pkgverspl")
-provides=('zfs')
-conflicts=('zfs-dkms' 'zfs-dkms-therp' 'zfs-dkms-therp-git' 'zfs-kmod-dkms')
+pkgdesc='Kernel modules for the Zettabyte File System.'
+arch=(i686 x86_64)
+groups=(zfsonlinux)
+makedepends=(gcc make autoconf automake git)
+depends=(dkms spl-kmod-dkms-git=$_pkgverspl)
+provides=(zfs)
+conflicts=(zfs-dkms zfs-dkms-therp zfs-dkms-therp-git zfs-kmod-dkms)
 url='http://zfsonlinux.org/'
-license=('CDDL')
-source=("$pkgname"::'git+git://github.com/zfsonlinux/zfs.git'
-        'git+git://github.com/zfsonlinux/spl.git'
+license=(CDDL)
+source=($pkgname::git+git://github.com/zfsonlinux/zfs.git
+        git+git://github.com/zfsonlinux/spl.git
         zfs-kmod-dkms.install
         dkms.mkconf.patch
         sysconfig.zfs)

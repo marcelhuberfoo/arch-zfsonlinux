@@ -6,17 +6,17 @@ pkgname=zfs-utilities-git
 pkgver=0.6.2.r167.g01b738f
 _pkgverspl=0.6.2.r23.g4c99541
 pkgrel=1
-pkgdesc="Zettabyte File System management utilities."
-arch=('i686' 'x86_64')
-groups=('zfsonlinux')
-makedepends=('gcc' 'make' 'autoconf' 'automake' 'git')
-depends=('spl-utilities-git=$_pkgverspl' 'zfs-kmod-dkms-git=$pkgver')
-provides=('zfs')
-conflicts=('zfs-utils' 'zfs-utils-therp' 'zfs-utils-therp-git' 'zfs-utilities')
+pkgdesc='Zettabyte File System management utilities.'
+arch=(i686 x86_64)
+groups=(zfsonlinux)
+makedepends=(gcc make autoconf automake git)
+depends=(spl-utilities-git=$_pkgverspl zfs-kmod-dkms-git=$pkgver)
+provides=(zfs)
+conflicts=(zfs-utils zfs-utils-therp zfs-utils-therp-git zfs-utilities)
 url='http://zfsonlinux.org/'
-license=('CDDL')
-source=("$pkgname"::'git+git://github.com/zfsonlinux/zfs.git'
-        'git+git://github.com/zfsonlinux/spl.git'
+license=(CDDL)
+source=($pkgname::git+git://github.com/zfsonlinux/zfs.git
+        git+git://github.com/zfsonlinux/spl.git
         zfs-utilities.bash-completion
         zfs-utilities.initcpio.install
         zfs-utilities.initcpio.hook

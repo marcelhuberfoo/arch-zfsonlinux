@@ -6,15 +6,15 @@ pkgname=spl-utilities-git
 pkgver=0.6.2.r23.g4c99541
 pkgrel=1
 pkgdesc='Solaris Porting Layer splat utility.'
-arch=('i686' 'x86_64')
-groups=('zfsonlinux')
-makedepends=('gcc' 'make' 'autoconf' 'automake' 'git')
-depends=("spl-kmod-dkms-git=$pkgver")
-provides=('spl')
-conflicts=('spl-utils' 'spl-utils-therp' 'spl-utils-therp-git' 'spl-utilities')
+arch=(i686 x86_64)
+groups=(zfsonlinux)
+makedepends=(gcc make autoconf automake git)
+depends=(spl-kmod-dkms-git=$pkgver)
+provides=(spl)
+conflicts=(spl-utils spl-utils-therp spl-utils-therp-git spl-utilities)
 url='http://zfsonlinux.org/'
-license=('GPL2')
-source=("$pkgname"::'git+git://github.com/zfsonlinux/spl.git'
+license=(GPL2)
+source=($pkgname::git+git://github.com/zfsonlinux/spl.git
         spl-utilities.install)
 sha256sums=('SKIP'
             'aa5f3fd025c05078067acf01cbad82af322b4b8542d2d1c6a9103338eff6729d')

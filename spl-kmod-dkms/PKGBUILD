@@ -6,15 +6,15 @@ pkgname=spl-kmod-dkms-git
 pkgver=0.6.2.r23.g4c99541
 pkgrel=1
 pkgdesc='Solaris Porting Layer kernel modules.'
-arch=('i686' 'x86_64')
-groups=('zfsonlinux')
-makedepends=('gcc' 'make' 'autoconf' 'automake' 'git')
-depends=('dkms')
-provides=('spl')
-conflicts=('spl-dkms' 'spl-dkms-therp' 'spl-dkms-therp-git' 'spl-kmod-dkms')
+arch=(i686 x86_64)
+groups=(zfsonlinux)
+makedepends=(gcc make autoconf automake git)
+depends=(dkms)
+provides=(spl)
+conflicts=(spl-dkms spl-dkms-therp spl-dkms-therp-git spl-kmod-dkms)
 url='http://zfsonlinux.org/'
-license=('GPL2')
-source=("$pkgname"::'git+git://github.com/zfsonlinux/spl.git'
+license=(GPL2)
+source=($pkgname::git+git://github.com/zfsonlinux/spl.git
         spl-kmod-dkms.install
         sysconfig.spl)
 sha256sums=('SKIP'
