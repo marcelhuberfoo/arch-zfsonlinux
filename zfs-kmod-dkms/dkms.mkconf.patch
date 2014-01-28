@@ -1,0 +1,51 @@
+From ab1cdc33ec1b7eb28da3552fef2d0fc57f9289e4 Mon Sep 17 00:00:00 2001
+From: Marcel Huber <marcel.huber@hsr.ch>
+Date: Tue, 28 Jan 2014 08:37:52 +0100
+Subject: extended for specific spl version
+
+
+diff --git a/scripts/dkms.mkconf b/scripts/dkms.mkconf
+index ecdee71..8396879 100755
+--- a/scripts/dkms.mkconf
++++ b/scripts/dkms.mkconf
+@@ -4,31 +4,33 @@ PROG=$0
+ 
+ pkgcfg=/etc/sysconfig/zfs
+ 
+-while getopts "n:v:c:f:" opt; do
++while getopts "n:v:c:f:s:" opt; do
+ 	case $opt in
+ 		n) pkgname=$OPTARG ;;
+ 		v) pkgver=$OPTARG  ;;
++		s) pkgverspl=$OPTARG  ;;
+ 		c) pkgcfg=$OPTARG ;;
+ 		f) filename=$OPTARG ;;
+ 	esac
+ done
+ 
+ if [ -z "${pkgname}" -o -z "${pkgver}" -o -z "${filename}" ]; then
+-	echo "Usage: $PROG -n <pkgname> -v <pkgver> -c <pkgcfg> -f <filename>"
++	echo "Usage: $PROG -n <pkgname> -v <pkgver> [-s <pkgverspl>] -c <pkgcfg> -f <filename>"
+ 	exit 1
+ fi
+ 
+ cat >${filename} <<EOF
+ PACKAGE_NAME="${pkgname}"
+ PACKAGE_VERSION="${pkgver}"
++PACKAGE_VERSION_SPL="${pkgverspl:-$pkgver}"
+ PACKAGE_CONFIG="${pkgcfg}"
+ PRE_BUILD="configure
+   --prefix=/usr
+   --with-config=kernel
+   --with-linux=\${kernel_source_dir}
+   --with-linux-obj=\${kernel_source_dir}
+-  --with-spl=\${dkms_tree}/spl/\${PACKAGE_VERSION}/build
+-  --with-spl-obj=\${dkms_tree}/spl/\${PACKAGE_VERSION}/\${kernelver}/\${arch}
++  --with-spl=\${dkms_tree}/spl/\${PACKAGE_VERSION_SPL}/build
++  --with-spl-obj=\${dkms_tree}/spl/\${PACKAGE_VERSION_SPL}/\${kernelver}/\${arch}
+   --with-spl-timeout=300
+   \$(
+     [[ -r \${PACKAGE_CONFIG} ]] \\
+-- 
+1.8.5.3
+

@@ -18,10 +18,12 @@ license=('CDDL')
 source=("$pkgname"::'git+git://github.com/zfsonlinux/zfs.git'
         'git+git://github.com/zfsonlinux/spl.git'
         zfs-kmod-dkms.install
+        dkms.mkconf.patch
         sysconfig.zfs)
 sha256sums=('SKIP'
             'SKIP'
             '07dbd4765f2efae16b1a7781ed10edddc1d8112ad87b7cd17b6cc9736efb14de'
+            'c2207c4debc4cd04296d67b64055cd922bcbea17295659b9dfd18e2895ee3d27'
             '97588da65a841b22a82494ed53a69d24584e46ab764eed9892a83496df9b2555')
 install=zfs-kmod-dkms.install
 backup=(etc/sysconfig/zfs)
@@ -54,6 +56,7 @@ pkgver_spl() {
 
 prepare() {
   cd "$srcdir/$pkgname"
+  patch -Np1 < ../dkms.mkconf.patch
 }
 
 build() {
@@ -68,8 +71,8 @@ build() {
               --with-udevdir=/lib/udev \
               --libexecdir=/usr/lib/zfs-${pkgver} \
               --with-config=user
-  scripts/dkms.mkconf -v $pkgver -f dkms.conf -n zfs
-  ## modify dkms.conf, duplicate PACKAGE_VERSION to PACKAGE_VERSION_SPL and replace in with-spl lines
+  ## extended dkms.mkconf to allow use of spl version different from zfs version
+  scripts/dkms.mkconf -v $pkgver -s $_pkgverspl -f dkms.conf -n zfs
 }
 
 package() {
