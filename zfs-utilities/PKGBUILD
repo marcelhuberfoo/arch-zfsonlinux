@@ -10,8 +10,7 @@ pkgdesc="Zettabyte File System management utilities."
 arch=('i686' 'x86_64')
 groups=('zfsonlinux')
 makedepends=('gcc' 'make' 'autoconf' 'automake' 'git')
-depends=("zfs-kmod-dkms-git=$pkgver")
-optdepends=("spl-utilities=$_pkgverspl: for splat support")
+depends=('spl-utilities-git=$_pkgverspl' 'zfs-kmod-dkms-git=$pkgver')
 provides=('zfs')
 conflicts=('zfs-utils' 'zfs-utils-therp' 'zfs-utils-therp-git' 'zfs-utilities')
 url='http://zfsonlinux.org/'
