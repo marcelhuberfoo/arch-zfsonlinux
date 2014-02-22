@@ -3,8 +3,8 @@
 # Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
 
 pkgname=zfs-utilities-git
-pkgver=0.6.2.r195.g0ad85ed
-_pkgverspl=0.6.2.r23.g4c99541
+pkgver=0.6.2.195.g0ad85ed
+_pkgverspl=0.6.2.23.g4c99541
 pkgrel=1
 pkgdesc='Zettabyte File System management utilities.'
 arch=(i686 x86_64)
@@ -30,11 +30,14 @@ sha256sums=('SKIP'
 
 pkgver() {
   cd "$srcdir/$pkgname"
+  # update dependent projects revision information
   local dummy=$(pkgver_spl)
   if GITTAG="$(git describe --abbrev=0 --tags 2>/dev/null)"; then
-    echo $(sed -e s/^${pkgname%%-git}// -e 's/^[-_/a-zA-Z]\+//' -e 's/[_-+]/./g' <<< ${GITTAG}).r$(git rev-list --count ${GITTAG}..).g$(git log -1 --format=%h)
+    local _revs_ahead_tag=$(git rev-list --count ${GITTAG}..)
+    local _commit_id_short=$(git log -1 --format=%h)
+    echo $(sed -e s/^${pkgname%%-git}// -e 's/^[-_/a-zA-Z]\+//' -e 's/[_-+]/./g' <<< ${GITTAG}).${_revs_ahead_tag}.g${_commit_id_short}
   else
-    echo 0.r$(git rev-list --count master).g$(git log -1 --format=%h)
+    echo 0.$(git rev-list --count master).g$(git log -1 --format=%h)
   fi
 }
 
@@ -42,9 +45,11 @@ pkgver_spl() {
   cd "$srcdir/spl"
   local _splver=""
   if GITTAG="$(git describe --abbrev=0 --tags 2>/dev/null)"; then
-    _splver="$(echo $(sed -e 's/^spl//' -e 's/^[-_/a-zA-Z]\+//' -e 's/[_-+]/./g' <<< ${GITTAG}).r$(git rev-list --count ${GITTAG}..).g$(git log -1 --format=%h) )"
+    local _revs_ahead_tag=$(git rev-list --count ${GITTAG}..)
+    local _commit_id_short=$(git log -1 --format=%h)
+    _splver="$(echo $(sed -e 's/^spl//' -e 's/^[-_/a-zA-Z]\+//' -e 's/[_-+]/./g' <<< ${GITTAG}).${_revs_ahead_tag}.g${_commit_id_short} )"
   else
-    _splver="$(echo 0.r$(git rev-list --count master).g$(git log -1 --format=\"%h\") )"
+    _splver="$(echo 0.$(git rev-list --count master).g$(git log -1 --format=\"%h\") )"
   fi
   # code copied over from makepkg
   if [[ -n $_splver && $_splver != "$_pkgverspl" ]]; then
