@@ -35,7 +35,7 @@ pkgver() {
   if GITTAG="$(git describe --abbrev=0 --tags 2>/dev/null)"; then
     local _revs_ahead_tag=$(git rev-list --count ${GITTAG}..)
     local _commit_id_short=$(git log -1 --format=%h)
-    echo $(sed -e s/^${pkgname%%-git}// -e 's/^[-_/a-zA-Z]\+//' -e 's/[_-+]/./g' <<< ${GITTAG}).${_revs_ahead_tag}.g${_commit_id_short}
+    echo $(sed -e s/^${pkgname%%-git}// -e 's/^[-_/a-zA-Z]\+//' -e 's/[-_+]/./g' <<< ${GITTAG}).${_revs_ahead_tag}.g${_commit_id_short}
   else
     echo 0.$(git rev-list --count master).g$(git log -1 --format=%h)
   fi
