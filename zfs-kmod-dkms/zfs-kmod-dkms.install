@@ -1,5 +1,5 @@
 post_install() {
-	dkms install -m zfs -v ${1%%-*}
+	dkms install --force -m zfs -v ${1%%-*}
 }
 
 pre_remove() {
