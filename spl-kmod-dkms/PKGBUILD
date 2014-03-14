@@ -4,7 +4,7 @@
 
 pkgname=spl-kmod-dkms-git
 pkgver=0.6.2.23.g4c99541
-pkgrel=1
+pkgrel=2
 pkgdesc='Solaris Porting Layer kernel modules.'
 arch=(i686 x86_64)
 groups=(zfsonlinux)
@@ -28,7 +28,7 @@ pkgver() {
   if GITTAG="$(git describe --abbrev=0 --tags 2>/dev/null)"; then
     local _revs_ahead_tag=$(git rev-list --count ${GITTAG}..)
     local _commit_id_short=$(git log -1 --format=%h)
-    echo $(sed -e s/^${pkgname%%-git}// -e 's/^[-_/a-zA-Z]\+//' -e 's/[-_+]/./g' <<< ${GITTAG}).${_revs_ahead_tag}.g${_commit_id_short}
+    echo $(sed -e s/^${pkgname%%-git}// -e 's/^[-_/a-zA-Z]\+//' -e 's/[-_+]/./g' <<< ${GITTAG}).r${_revs_ahead_tag}.g${_commit_id_short}
   else
     echo 0.$(git rev-list --count master).g$(git log -1 --format=%h)
   fi
@@ -36,6 +36,11 @@ pkgver() {
 
 prepare() {
   cd "$srcdir/$pkgname"
+  set -x
+  local _gitver="$(pkgver)"
+  local _version=$(echo $_gitver | sed 's|\.r.*||')
+  local _release=$(echo $_gitver | sed 's|[^r]*||')
+  # replace Version: and Release: in META files
 }
 
 build() {
