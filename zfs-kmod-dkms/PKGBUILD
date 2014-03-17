@@ -3,9 +3,9 @@
 # Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
 
 pkgname=zfs-kmod-dkms-git
-pkgver=0.6.2.213.ge2282ef
-_pkgverspl=0.6.2.23.g4c99541
-pkgrel=2
+pkgver=0.6.2.r213.ge2282ef
+_pkgverspl=0.6.2.r23.g4c99541
+pkgrel=1
 pkgdesc='Kernel modules for the Zettabyte File System.'
 arch=(i686 x86_64)
 groups=(zfsonlinux)
@@ -16,15 +16,13 @@ conflicts=(zfs-dkms zfs-dkms-therp zfs-dkms-therp-git zfs-kmod-dkms)
 url='http://zfsonlinux.org/'
 license=(CDDL)
 source=($pkgname::git+git://github.com/zfsonlinux/zfs.git
-        git+git://github.com/zfsonlinux/spl.git
+        spl::git+git://github.com/zfsonlinux/spl.git
         zfs-kmod-dkms.install
-        dkms.mkconf.patch
-        sysconfig.zfs)
+        dkms.mkconf.patch)
 sha256sums=('SKIP'
             'SKIP'
             '3d771b0810075b494fefdd6e9c79e3a73fe80c395d3efff8938b08d6cbb252f0'
-            'c2207c4debc4cd04296d67b64055cd922bcbea17295659b9dfd18e2895ee3d27'
-            '97588da65a841b22a82494ed53a69d24584e46ab764eed9892a83496df9b2555')
+            'c2207c4debc4cd04296d67b64055cd922bcbea17295659b9dfd18e2895ee3d27')
 install=zfs-kmod-dkms.install
 backup=(etc/sysconfig/zfs)
 
@@ -35,7 +33,7 @@ pkgver() {
   if GITTAG="$(git describe --abbrev=0 --tags 2>/dev/null)"; then
     local _revs_ahead_tag=$(git rev-list --count ${GITTAG}..)
     local _commit_id_short=$(git log -1 --format=%h)
-    echo $(sed -e s/^${pkgname%%-git}// -e 's/^[-_/a-zA-Z]\+//' -e 's/[-_+]/./g' <<< ${GITTAG}).${_revs_ahead_tag}.g${_commit_id_short}
+    echo $(sed -e s/^${pkgname%%-git}// -e 's/^[-_/a-zA-Z]\+//' -e 's/[-_+]/./g' <<< ${GITTAG}).r${_revs_ahead_tag}.g${_commit_id_short}
   else
     echo 0.$(git rev-list --count master).g$(git log -1 --format=%h)
   fi
@@ -47,7 +45,7 @@ pkgver_spl() {
   if GITTAG="$(git describe --abbrev=0 --tags 2>/dev/null)"; then
     local _revs_ahead_tag=$(git rev-list --count ${GITTAG}..)
     local _commit_id_short=$(git log -1 --format=%h)
-    _splver="$(echo $(sed -e 's/^spl//' -e 's/^[-_/a-zA-Z]\+//' -e 's/[-_+]/./g' <<< ${GITTAG}).${_revs_ahead_tag}.g${_commit_id_short} )"
+    _splver="$(echo $(sed -e 's/^spl//' -e 's/^[-_/a-zA-Z]\+//' -e 's/[-_+]/./g' <<< ${GITTAG}).r${_revs_ahead_tag}.g${_commit_id_short} )"
   else
     _splver="$(echo 0.$(git rev-list --count master).g$(git log -1 --format=\"%h\") )"
   fi
@@ -57,11 +55,33 @@ pkgver_spl() {
       sed --follow-symlinks -i "s/^_pkgverspl=[^ ]*/_pkgverspl=$_splver/" "$BUILDFILE"
     fi
   fi
+  echo $_splver
+}
+
+_my_replace_zfs_META() {
+  # replace Version: and Release: in zfs-META files
+  local _gitver="$(pkgver)"
+  local _version=$(echo $_gitver | sed 's|\.r.*||')
+  local _release=$(echo $_gitver | sed 's|[^r]*||')
+  sed -i -r -e "/^Version:/ { s/^([^0-9]*)[0-9.]+\$/\1$_version/ }" META
+  sed -i -r -e "/^Release:/ { s/^([^0-9r]*)[0-9a-fgr.]+\$/\1$_release/ }" META
+}
+
+_my_replace_spl_META() {
+  # replace Version: and Release: in spl-META files
+  local _gitver="$(pkgver_spl)"
+  local _version=$(echo $_gitver | sed 's|\.r.*||')
+  local _release=$(echo $_gitver | sed 's|[^r]*||')
+  cd "$srcdir/spl"
+  sed -i -r -e "/^Version:/ { s/^([^0-9]*)[0-9.]+\$/\1$_version/ }" META
+  sed -i -r -e "/^Release:/ { s/^([^0-9r]*)[0-9a-fgr.]+\$/\1$_release/ }" META
 }
 
 prepare() {
   cd "$srcdir/$pkgname"
   patch -Np1 < "$srcdir/dkms.mkconf.patch"
+  _my_replace_zfs_META
+  _my_replace_spl_META
 }
 
 build() {
@@ -78,12 +98,15 @@ build() {
               --with-config=user
   ## extended dkms.mkconf to allow use of spl version different from zfs version
   scripts/dkms.mkconf -v $pkgver -s $_pkgverspl -f dkms.conf -n zfs
+  # create sysconfig.zfs dynamically based on variables from scripts/dkms.mkconf, format is:
+  # if [[ \${ZFS_DKMS_ENABLE_DEBUG_KMEM,,} == @(y|yes) ]]
+  sed -n -r -e 's/^.*\{(ZFS_DKMS_ENABLE_[^,]*)[^@]*@\(([^|]*).*$/#\1=\2/ p' scripts/dkms.mkconf > sysconfig.zfs
 }
 
 package() {
   cd "$srcdir/$pkgname"
   install -d "$pkgdir/usr/src/zfs-${pkgver}"
-  install -D -m0644 "$srcdir/sysconfig.zfs" "$pkgdir/etc/sysconfig/zfs"
+  install -D -m0644 "$srcdir/$pkgname/sysconfig.zfs" "$pkgdir/etc/sysconfig/zfs"
   cp -a -T "$srcdir/$pkgname/" "$pkgdir/usr/src/zfs-${pkgver}"
   rm -rf "$pkgdir/usr/src/zfs-${pkgver}/.git"
 }

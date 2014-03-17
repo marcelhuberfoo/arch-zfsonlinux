@@ -3,8 +3,8 @@
 # Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
 
 pkgname=spl-kmod-dkms-git
-pkgver=0.6.2.23.g4c99541
-pkgrel=2
+pkgver=0.6.2.r23.g4c99541
+pkgrel=1
 pkgdesc='Solaris Porting Layer kernel modules.'
 arch=(i686 x86_64)
 groups=(zfsonlinux)
@@ -15,11 +15,9 @@ conflicts=(spl-dkms spl-dkms-therp spl-dkms-therp-git spl-kmod-dkms)
 url='http://zfsonlinux.org/'
 license=(GPL2)
 source=($pkgname::git+git://github.com/zfsonlinux/spl.git
-        spl-kmod-dkms.install
-        sysconfig.spl)
+        spl-kmod-dkms.install)
 sha256sums=('SKIP'
-            'd42cdf85f2186c14ff33efbcc2b6eed703a0656067e3f46b75ff377840cc01a9'
-            '94f46fb7ab0708b18e0d0c7d6d1bd1f8e2401bdc12373d15b0acc486cd56c8e4')
+            'd42cdf85f2186c14ff33efbcc2b6eed703a0656067e3f46b75ff377840cc01a9')
 install=spl-kmod-dkms.install
 backup=(etc/sysconfig/spl)
 
@@ -34,13 +32,18 @@ pkgver() {
   fi
 }
 
-prepare() {
-  cd "$srcdir/$pkgname"
-  set -x
+_my_replace_spl_META() {
+  # replace Version: and Release: in spl-META files
   local _gitver="$(pkgver)"
   local _version=$(echo $_gitver | sed 's|\.r.*||')
   local _release=$(echo $_gitver | sed 's|[^r]*||')
-  # replace Version: and Release: in META files
+  sed -i -r -e "/^Version:/ { s/^([^0-9]*)[0-9.]+\$/\1$_version/ }" META
+  sed -i -r -e "/^Release:/ { s/^([^0-9r]*)[0-9a-fgr.]+\$/\1$_release/ }" META
+}
+
+prepare() {
+  cd "$srcdir/$pkgname"
+  _my_replace_spl_META
 }
 
 build() {
@@ -51,12 +54,15 @@ build() {
               --sbindir=/usr/bin \
               --with-config=user
   scripts/dkms.mkconf -v $pkgver -f dkms.conf -n spl
+  # create sysconfig.spl dynamically based on variables from scripts/dkms.mkconf, format is:
+  # if [[ \${SPL_DKMS_ENABLE_DEBUG_KMEM,,} == @(y|yes) ]]
+  sed -n -r -e 's/^.*\{(SPL_DKMS_ENABLE_[^,]*)[^@]*@\(([^|]*).*$/#\1=\2/ p' scripts/dkms.mkconf > sysconfig.spl
 }
 
 package() {
   cd "$srcdir/$pkgname"
   install -d "$pkgdir/usr/src/spl-${pkgver}"
-  install -D -m0644 "$srcdir/sysconfig.spl" "$pkgdir/etc/sysconfig/spl"
+  install -D -m0644 "$srcdir/$pkgname/sysconfig.spl" "$pkgdir/etc/sysconfig/spl"
   cp -a -T "$srcdir/$pkgname/" "$pkgdir/usr/src/spl-${pkgver}"
   rm -rf "$pkgdir/usr/src/spl-${pkgver}/.git"
 }
