@@ -3,9 +3,9 @@
 # Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
 
 pkgname=zfs-kmod-dkms-git
-pkgver=0.6.2.r213.ge2282ef
-_pkgverspl=0.6.2.r23.g4c99541
-pkgrel=1
+pkgver=0.6.2.213.ge2282ef
+_pkgverspl=0.6.2.23.g4c99541
+pkgrel=3
 pkgdesc='Kernel modules for the Zettabyte File System.'
 arch=(i686 x86_64)
 groups=(zfsonlinux)
@@ -33,7 +33,7 @@ pkgver() {
   if GITTAG="$(git describe --abbrev=0 --tags 2>/dev/null)"; then
     local _revs_ahead_tag=$(git rev-list --count ${GITTAG}..)
     local _commit_id_short=$(git log -1 --format=%h)
-    echo $(sed -e s/^${pkgname%%-git}// -e 's/^[-_/a-zA-Z]\+//' -e 's/[-_+]/./g' <<< ${GITTAG}).r${_revs_ahead_tag}.g${_commit_id_short}
+    echo $(sed -e s/^${pkgname%%-git}// -e 's/^[-_/a-zA-Z]\+//' -e 's/[-_+]/./g' <<< ${GITTAG}).${_revs_ahead_tag}.g${_commit_id_short}
   else
     echo 0.$(git rev-list --count master).g$(git log -1 --format=%h)
   fi
@@ -45,7 +45,7 @@ pkgver_spl() {
   if GITTAG="$(git describe --abbrev=0 --tags 2>/dev/null)"; then
     local _revs_ahead_tag=$(git rev-list --count ${GITTAG}..)
     local _commit_id_short=$(git log -1 --format=%h)
-    _splver="$(echo $(sed -e 's/^spl//' -e 's/^[-_/a-zA-Z]\+//' -e 's/[-_+]/./g' <<< ${GITTAG}).r${_revs_ahead_tag}.g${_commit_id_short} )"
+    _splver="$(echo $(sed -e 's/^spl//' -e 's/^[-_/a-zA-Z]\+//' -e 's/[-_+]/./g' <<< ${GITTAG}).${_revs_ahead_tag}.g${_commit_id_short} )"
   else
     _splver="$(echo 0.$(git rev-list --count master).g$(git log -1 --format=\"%h\") )"
   fi
@@ -58,30 +58,22 @@ pkgver_spl() {
   echo $_splver
 }
 
-_my_replace_zfs_META() {
-  # replace Version: and Release: in zfs-META files
-  local _gitver="$(pkgver)"
-  local _version=$(echo $_gitver | sed 's|\.r.*||')
-  local _release=$(echo $_gitver | sed 's|[^r]*||')
-  sed -i -r -e "/^Version:/ { s/^([^0-9]*)[0-9.]+\$/\1$_version/ }" META
-  sed -i -r -e "/^Release:/ { s/^([^0-9r]*)[0-9a-fgr.]+\$/\1$_release/ }" META
-}
-
-_my_replace_spl_META() {
-  # replace Version: and Release: in spl-META files
-  local _gitver="$(pkgver_spl)"
-  local _version=$(echo $_gitver | sed 's|\.r.*||')
-  local _release=$(echo $_gitver | sed 's|[^r]*||')
-  cd "$srcdir/spl"
-  sed -i -r -e "/^Version:/ { s/^([^0-9]*)[0-9.]+\$/\1$_version/ }" META
-  sed -i -r -e "/^Release:/ { s/^([^0-9r]*)[0-9a-fgr.]+\$/\1$_release/ }" META
+# $1 version, $2 file
+_my_replace_META_Version() {
+  local _gitver="${1}"
+  local _filename="${2}"
+  # replace Version: and Release: in META files
+  local _version=$(echo $_gitver | sed 's|\.[0-9]*\.[0-9a-fg]*$||')
+  local _release=$(echo $_gitver | sed -r 's|^.*\.([0-9]*\.[0-9a-fg]*)$|\1|')
+  sed -i -r -e "/^Version:/ { s/^([^0-9]*)[0-9.]+\$/\1$_version/ }" "$_filename"
+  sed -i -r -e "/^Release:/ { s/^([^0-9r]*)[0-9a-fgr.]+\$/\1$_release/ }" "$_filename"
 }
 
 prepare() {
   cd "$srcdir/$pkgname"
   patch -Np1 < "$srcdir/dkms.mkconf.patch"
-  _my_replace_zfs_META
-  _my_replace_spl_META
+  _my_replace_META_Version "$(pkgver)" "$srcdir/$pkgname/META"
+  _my_replace_META_Version "$(pkgver_spl)" "$srcdir/spl/META"
 }
 
 build() {
