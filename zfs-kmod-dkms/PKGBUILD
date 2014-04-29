@@ -5,7 +5,7 @@
 pkgname=zfs-kmod-dkms-git
 pkgver=0.6.2.261.g1758498
 _pkgverspl=0.6.2.36.g703371d
-pkgrel=2
+pkgrel=3
 pkgdesc='Kernel modules for the Zettabyte File System.'
 arch=(i686 x86_64)
 groups=(zfsonlinux)
@@ -21,7 +21,7 @@ source=($pkgname::git+git://github.com/zfsonlinux/zfs.git
         dkms.mkconf.patch)
 sha256sums=('SKIP'
             'SKIP'
-            '08e4d0ff0c2dd36e8ec23e0cbec69a0578c7d3c6eae86c45b2929f491b7363fa'
+            '1cbcfc41d4a06914dda0e46724ffb6fd21dea4f16de9b42d9aafd8e8720c295e'
             'c2207c4debc4cd04296d67b64055cd922bcbea17295659b9dfd18e2895ee3d27')
 install=zfs-kmod-dkms.install
 backup=(etc/sysconfig/zfs)

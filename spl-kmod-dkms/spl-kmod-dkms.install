@@ -9,16 +9,16 @@ post_install() {
   dkms add --force -m $_my_kmod -v $newver
   cat << EOF
 => To build and install your modules you have the following options
-    of which I recommend using the kernel dkms hook.
+   of which I recommend using the kernel dkms hook.
 
 +) automatically while building a new kernel; add 'dkms' hook to
-       the HOOKS variable in /etc/mkinitcpio.conf and rebuild your kernels
+   the HOOKS variable in /etc/mkinitcpio.conf and rebuild your kernels
 
 =) manually; dkms install -m $_my_kmod -v $newver
 
 -) automatically at startup; systemctl enable dkms.service
-       WARNING: Building during startup is too late when using a zfs pool
-                for your root/usr drive!
+   WARNING: Building during startup is too late when using a zfs pool
+            for your root/usr drive!
 EOF
 }
 
