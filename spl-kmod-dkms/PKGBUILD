@@ -3,8 +3,8 @@
 # Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
 
 pkgname=spl-kmod-dkms-git
-pkgver=0.6.2.33.g89aa970
-pkgrel=1
+pkgver=0.6.2.36.g703371d
+pkgrel=2
 pkgdesc='Solaris Porting Layer kernel modules.'
 arch=(i686 x86_64)
 groups=(zfsonlinux)
@@ -17,7 +17,7 @@ license=(GPL2)
 source=($pkgname::git+git://github.com/zfsonlinux/spl.git
         spl-kmod-dkms.install)
 sha256sums=('SKIP'
-            'd42cdf85f2186c14ff33efbcc2b6eed703a0656067e3f46b75ff377840cc01a9')
+            '95a882ae65fc45cc81d407134c693b5ac267ac2b019dd4a415492172f939193a')
 install=spl-kmod-dkms.install
 backup=(etc/sysconfig/spl)
 
