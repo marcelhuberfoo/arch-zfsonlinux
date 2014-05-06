@@ -4,7 +4,7 @@
 
 pkgname=spl-kmod-dkms-git
 pkgver=0.6.2.36.g703371d
-pkgrel=5
+pkgrel=6
 pkgdesc='Solaris Porting Layer kernel modules.'
 arch=(i686 x86_64)
 groups=(zfsonlinux)
@@ -17,7 +17,7 @@ license=(GPL2)
 source=($pkgname::git+git://github.com/zfsonlinux/spl.git
         spl-kmod-dkms.install)
 sha256sums=('SKIP'
-            'cde298023765f762d2b32943913ccc51d0a1ba8047c8b4ffeb5d811810ce5948')
+            'd42cdf85f2186c14ff33efbcc2b6eed703a0656067e3f46b75ff377840cc01a9')
 install=spl-kmod-dkms.install
 backup=(etc/sysconfig/spl)
 
@@ -51,10 +51,6 @@ prepare() {
 build() {
   cd "$srcdir/$pkgname"
   ./autogen.sh
-  ./configure --prefix=/usr \
-              --libdir=/usr/lib \
-              --sbindir=/usr/bin \
-              --with-config=user
   scripts/dkms.mkconf -v $pkgver -f dkms.conf -n spl
   # create sysconfig.spl dynamically based on variables from scripts/dkms.mkconf, format is:
   # if [[ \${SPL_DKMS_ENABLE_DEBUG_KMEM,,} == @(y|yes) ]]
