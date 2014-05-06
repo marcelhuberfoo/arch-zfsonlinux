@@ -8,8 +8,8 @@ post_install() {
   local newver=${1%%-*}
   dkms add --force -m $_my_kmod -v $newver
   cat << EOF
-=> To build and install your modules you have the following options
-   of which I recommend using the kernel dkms hook.
+=> To rebuild and install your modules after installing a new kernel version
+   you have the following options of which I recommend using the kernel dkms hook.
 
 +) automatically while building a new kernel; add 'dkms' hook to
    the HOOKS variable in /etc/mkinitcpio.conf and rebuild your kernels
