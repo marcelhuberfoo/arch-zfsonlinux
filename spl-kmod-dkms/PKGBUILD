@@ -17,7 +17,7 @@ license=(GPL2)
 source=($pkgname::git+git://github.com/zfsonlinux/spl.git
         spl-kmod-dkms.install)
 sha256sums=('SKIP'
-            'd42cdf85f2186c14ff33efbcc2b6eed703a0656067e3f46b75ff377840cc01a9')
+            'db1f5774adc5bd094b792d6785641e43af1be73572a499d7cc4014e4dc55c433')
 install=spl-kmod-dkms.install
 backup=(etc/sysconfig/spl)
 
