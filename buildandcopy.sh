@@ -1,15 +1,16 @@
 #!/bin/sh
 
+thedirs="spl-kmod-dkms spl-utilities zfs-kmod-dkms zfs-utilities"
 set -e
 echo "Start updating from git (y*|n)?"
 read v
 if [ "$v" = "n" -o "$v" = "N" ]; then false; fi
-for n in spl-kmod-dkms spl-utilities zfs-kmod-dkms zfs-utilities; do ( cd $n && updpkgsums ;  makepkg --force --noprogressbar --nodeps --nobuild ); done
+for n in $thedirs; do ( cd $n && updpkgsums ;  makepkg --force --noprogressbar --nodeps --nobuild ); done
 
 echo "Start building (y*|n)?"
 read v
 if [ "$v" = "n" -o "$v" = "N" ]; then false; fi
-for n in spl-kmod-dkms spl-utilities zfs-kmod-dkms zfs-utilities; do ( cd $n && updpkgsums ;  makepkg --force --noprogressbar --nodeps ); done
+for n in $thedirs; do ( cd $n && updpkgsums ;  makepkg --force --noprogressbar --nodeps ); done
 
 repodir=/home/own-repo
 
