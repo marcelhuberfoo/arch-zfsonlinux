@@ -45,6 +45,8 @@ _my_replace_META_Version() {
 
 prepare() {
   cd "$srcdir/$pkgname"
+  git clean -dxf 2>/dev/null
+  git reset --hard 2>/dev/null
   _my_replace_META_Version "$(pkgver)" "$srcdir/$pkgname/META"
 }
 
