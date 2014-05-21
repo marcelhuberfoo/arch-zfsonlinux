@@ -3,7 +3,7 @@
 # Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
 
 pkgname=zfs-utilities-git
-pkgver=0.6.2.275.gbc25c93
+pkgver=0.6.2.280.g5f3c101
 _pkgverspl=0.6.2.38.gad3412e
 pkgrel=1
 pkgdesc='Zettabyte File System management utilities.'
