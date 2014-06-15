@@ -3,7 +3,7 @@
 # Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
 
 pkgname=spl-utilities-git
-pkgver=0.6.3.1.gf6a8696
+pkgver=0.6.3.0.g31cb538
 pkgrel=1
 pkgdesc='Solaris Porting Layer splat utility.'
 arch=(i686 x86_64)
