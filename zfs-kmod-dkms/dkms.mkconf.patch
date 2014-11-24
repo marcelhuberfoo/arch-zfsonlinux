@@ -1,13 +1,13 @@
-From ab1cdc33ec1b7eb28da3552fef2d0fc57f9289e4 Mon Sep 17 00:00:00 2001
-From: Marcel Huber <marcel.huber@hsr.ch>
-Date: Tue, 28 Jan 2014 08:37:52 +0100
-Subject: extended for specific spl version
+From 69a3ba6190b586a25d1422ce856b5980273331ab Mon Sep 17 00:00:00 2001
+From: Marcel Huber <marcelhuberfoo@gmail.com>
+Date: Mon, 24 Nov 2014 22:28:42 +0100
+Subject: spl mkconf patch
 
 
-diff --git a/scripts/dkms.mkconf b/scripts/dkms.mkconf
-index ecdee71..8396879 100755
---- a/scripts/dkms.mkconf
-+++ b/scripts/dkms.mkconf
+diff --git scripts/dkms.mkconf scripts/dkms.mkconf
+index caba1be..2b60e2b 100755
+--- scripts/dkms.mkconf
++++ scripts/dkms.mkconf
 @@ -4,31 +4,33 @@ PROG=$0
  
  pkgcfg=/etc/sysconfig/zfs
@@ -39,13 +39,13 @@ index ecdee71..8396879 100755
    --with-config=kernel
    --with-linux=\${kernel_source_dir}
    --with-linux-obj=\${kernel_source_dir}
--  --with-spl=\${dkms_tree}/spl/\${PACKAGE_VERSION}/build
+-  --with-spl=\${source_tree}/spl-\${PACKAGE_VERSION}
 -  --with-spl-obj=\${dkms_tree}/spl/\${PACKAGE_VERSION}/\${kernelver}/\${arch}
-+  --with-spl=\${dkms_tree}/spl/\${PACKAGE_VERSION_SPL}/build
++  --with-spl=\${source_tree}/spl-\${PACKAGE_VERSION_SPL}
 +  --with-spl-obj=\${dkms_tree}/spl/\${PACKAGE_VERSION_SPL}/\${kernelver}/\${arch}
    --with-spl-timeout=300
    \$(
      [[ -r \${PACKAGE_CONFIG} ]] \\
 -- 
-1.8.5.3
+2.1.3
 
