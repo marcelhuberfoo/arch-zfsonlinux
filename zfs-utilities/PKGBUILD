@@ -109,10 +109,6 @@ package() {
   cp -r "${pkgdir}"/{lib,usr}
   rm -r "${pkgdir}/lib"
 
-  # Fixup path
-  mv "${pkgdir}/sbin/mount.zfs" "${pkgdir}/usr/bin/"
-  rm -r "${pkgdir}/sbin"
-
   install -D -m644 "${srcdir}/zfs-utilities.initcpio.hook" "${pkgdir}/usr/lib/initcpio/hooks/zfs"
   install -D -m644 "${srcdir}/zfs-utilities.initcpio.install" "${pkgdir}/usr/lib/initcpio/install/zfs"
   install -D -m644 "${srcdir}/zfs-utilities.service" "${pkgdir}/usr/lib/systemd/system/zfs.service"
