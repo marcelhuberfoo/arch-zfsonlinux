@@ -3,7 +3,7 @@
 # Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
 
 pkgname=spl-kmod-dkms-git
-pkgver=0.6.3.53.ga3c1eb7
+pkgver=0.6.3.54.g03a7835
 pkgrel=1
 pkgdesc='Solaris Porting Layer kernel modules.'
 arch=(i686 x86_64)
