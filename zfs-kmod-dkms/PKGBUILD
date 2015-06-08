@@ -5,7 +5,7 @@
 pkgname=zfs-kmod-dkms-git
 pkgver=0.6.4.82.g5f8e1e8
 _pkgverspl=0.6.4.5.gdc5e8b7
-pkgrel=1
+pkgrel=2
 pkgdesc='Kernel modules for the Zettabyte File System.'
 arch=(i686 x86_64)
 groups=(zfsonlinux)
@@ -24,7 +24,6 @@ sha256sums=('SKIP'
             'fb45023e2f14cb70ad6286c0b73b7346d9e348a6e04d716f0eba4cd943e21c31'
             '15f51e42ac2cda0d0f0d26f5c00cb2712c59dcd66684248f22412b878c7a5d29')
 install=zfs-kmod-dkms.install
-backup=(etc/sysconfig/zfs)
 
 pkgver() {
   cd "$srcdir/$pkgname"
@@ -86,15 +85,11 @@ build() {
   ./autogen.sh
   ## extended dkms.mkconf to allow use of spl version different from zfs version
   scripts/dkms.mkconf -v $pkgver -s $_pkgverspl -f dkms.conf -n zfs
-  # create sysconfig.zfs dynamically based on variables from scripts/dkms.mkconf, format is:
-  # if [[ \${ZFS_DKMS_ENABLE_DEBUG_KMEM,,} == @(y|yes) ]]
-  sed -n -r -e 's/^.*\{(ZFS_DKMS_ENABLE_[^,]*)[^@]*@\(([^|]*).*$/#\1=\2/ p' scripts/dkms.mkconf > sysconfig.zfs
 }
 
 package() {
   cd "$srcdir/$pkgname"
   install -d "$pkgdir/usr/src/zfs-${pkgver}"
-  install -D -m0644 "$srcdir/$pkgname/sysconfig.zfs" "$pkgdir/etc/sysconfig/zfs"
   cp -a -T "$srcdir/$pkgname/" "$pkgdir/usr/src/zfs-${pkgver}"
   rm -rf "$pkgdir/usr/src/zfs-${pkgver}/.git"
 }
