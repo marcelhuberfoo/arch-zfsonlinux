@@ -3,8 +3,8 @@
 # Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
 
 pkgname=zfs-kmod-dkms-git
-pkgver=0.6.5.32.g256fa98
-_pkgverspl=0.6.5.10.g31f2493
+pkgver=0.6.5.35.g5c79067
+_pkgverspl=0.6.5.11.ge7b75d9
 pkgrel=1
 pkgdesc='Kernel modules for the Zettabyte File System.'
 arch=(i686 x86_64)
