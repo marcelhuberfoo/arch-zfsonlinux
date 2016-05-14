@@ -1,0 +1,25 @@
+From d74c354fcbe3f7baf452b3554b2b8d3cfc5a2b8b Mon Sep 17 00:00:00 2001
+From: Marcel Huber <marcelhuberfoo@gmail.com>
+Date: Sat, 14 May 2016 23:14:23 +0200
+Subject: fix incorrect semicolon
+
+---
+ module/zfs/zio_inject.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git module/zfs/zio_inject.c module/zfs/zio_inject.c
+index a6eca87..4d88f3e 100644
+--- module/zfs/zio_inject.c
++++ module/zfs/zio_inject.c
+@@ -380,7 +380,7 @@ zio_handle_io_delay(zio_t *zio)
+ 			continue;
+ 
+ 		if (handler->zi_record.zi_freq != 0 &&
+-		    spa_get_random(100) >= handler->zi_record.zi_freq);
++		    spa_get_random(100) >= handler->zi_record.zi_freq)
+ 			continue;
+ 
+ 		if (vd->vdev_guid == handler->zi_record.zi_guid) {
+-- 
+2.8.2
+
