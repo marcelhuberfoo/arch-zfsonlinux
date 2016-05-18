@@ -3,7 +3,7 @@
 # Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
 
 pkgname=zfs-utilities-git
-pkgver=0.6.5.271.gee8e9d4
+pkgver=0.6.5.280.g81b4c07
 _pkgverspl=0.6.5.54.g39cd90e
 pkgrel=1
 pkgdesc='Zettabyte File System management utilities.'
@@ -20,15 +20,13 @@ source=($pkgname::git+git://github.com/zfsonlinux/zfs.git
         zfs-utilities.bash-completion
         zfs-utilities.initcpio.install
         zfs-utilities.initcpio.hook
-        zfs-utilities.service
-        zio_inject.c.patch)
+        zfs-utilities.service)
 sha256sums=('SKIP'
             'SKIP'
             '15e742477fad0104871fc055b6ce9bf803540070e47fa515ea7ca3c1a401f831'
             '1ea6d2cdd27798680a96c9ebf18e9167b0575d032c7cfc731f16456cd38f2040'
             'ab63abbd7fd8cb0a8293651947fda82a1b41d420cbb8e6c71c0fd3884ab43030'
-            'fd0abaf09de5e472cca449439def43f1dbbd13f1c5f4bd0d233f59563de1637a'
-            '515177a53e725602c3defc9d265921faa62426140120fbce9046065766364a86')
+            'fd0abaf09de5e472cca449439def43f1dbbd13f1c5f4bd0d233f59563de1637a')
 
 pkgver() {
   cd "$srcdir/$pkgname" 2>/dev/null && (
@@ -81,7 +79,6 @@ prepare() {
   cd "$srcdir/$pkgname"
   git clean -dxf 2>/dev/null
   git reset --hard 2>/dev/null
-  patch -Np0 -i "$srcdir/zio_inject.c.patch"
   _my_replace_META_Version "$(pkgver)" "$srcdir/$pkgname/META"
   _my_replace_META_Version "$(pkgver_spl)" "$srcdir/spl/META"
 }
