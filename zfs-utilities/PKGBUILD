@@ -3,8 +3,8 @@
 # Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
 
 pkgname=zfs-utilities-git
-pkgver=0.6.5.368.gf26b4b3
-_pkgverspl=0.6.5.64.gd2f97b2
+pkgver=0.6.5.377.gdf053d6
+_pkgverspl=0.6.5.65.gb7c7008
 pkgrel=1
 pkgdesc='Zettabyte File System management utilities.'
 arch=(i686 x86_64)
@@ -22,9 +22,9 @@ source=($pkgname::git+git://github.com/zfsonlinux/zfs.git
         zfs-utilities.initcpio.hook)
 sha256sums=('SKIP'
             'SKIP'
-            '15e742477fad0104871fc055b6ce9bf803540070e47fa515ea7ca3c1a401f831'
-            '1ea6d2cdd27798680a96c9ebf18e9167b0575d032c7cfc731f16456cd38f2040'
-            'ab63abbd7fd8cb0a8293651947fda82a1b41d420cbb8e6c71c0fd3884ab43030')
+            'b60214f70ffffb62ffe489cbfabd2e069d14ed2a391fac0e36f914238394b540'
+            '1e20071fa61a33874505dae0f2d71bb560f43e7faaea735cbde770ea10c133df'
+            '67a96169d36853d8f18ee5a2443ecfcd2461a20f9109f4b281bee3945d83518a')
 
 pkgver() {
   cd "$srcdir/$pkgname" 2>/dev/null && (
