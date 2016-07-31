@@ -5,7 +5,7 @@
 pkgname=zfs-utilities-git
 pkgver=0.6.5.377.gdf053d6
 _pkgverspl=0.6.5.65.gb7c7008
-pkgrel=1
+pkgrel=2
 pkgdesc='Zettabyte File System management utilities.'
 arch=(i686 x86_64)
 groups=(zfsonlinux)
@@ -24,7 +24,7 @@ sha256sums=('SKIP'
             'SKIP'
             'b60214f70ffffb62ffe489cbfabd2e069d14ed2a391fac0e36f914238394b540'
             '1e20071fa61a33874505dae0f2d71bb560f43e7faaea735cbde770ea10c133df'
-            '67a96169d36853d8f18ee5a2443ecfcd2461a20f9109f4b281bee3945d83518a')
+            '080d7efa5beb3140b0bf69fb0d8944d27a3b543565da23febbc11f3ee789748f')
 
 pkgver() {
   cd "$srcdir/$pkgname" 2>/dev/null && (
