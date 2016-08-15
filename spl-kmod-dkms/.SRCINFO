@@ -1,0 +1,29 @@
+pkgbase = spl-kmod-dkms-git
+	pkgdesc = Solaris Porting Layer kernel modules.
+	pkgver = 0.6.5.68.g576865b
+	pkgrel = 1
+	url = http://zfsonlinux.org/
+	install = spl-kmod-dkms.install
+	arch = i686
+	arch = x86_64
+	groups = zfsonlinux
+	license = GPL2
+	makedepends = gcc
+	makedepends = make
+	makedepends = autoconf
+	makedepends = automake
+	makedepends = git
+	depends = dkms
+	provides = spl
+	conflicts = spl-dkms
+	conflicts = spl-dkms-therp
+	conflicts = spl-dkms-therp-git
+	conflicts = spl-kmod-dkms
+	backup = etc/sysconfig/spl
+	source = spl-kmod-dkms-git::git+git://github.com/zfsonlinux/spl.git
+	source = spl-kmod-dkms.install
+	sha256sums = SKIP
+	sha256sums = db1f5774adc5bd094b792d6785641e43af1be73572a499d7cc4014e4dc55c433
+
+pkgname = spl-kmod-dkms-git
+

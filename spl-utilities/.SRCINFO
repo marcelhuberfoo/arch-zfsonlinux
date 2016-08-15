@@ -1,0 +1,28 @@
+pkgbase = spl-utilities-git
+	pkgdesc = Solaris Porting Layer splat utility.
+	pkgver = 0.6.5.68.g576865b
+	pkgrel = 1
+	url = http://zfsonlinux.org/
+	install = spl-utilities.install
+	arch = i686
+	arch = x86_64
+	groups = zfsonlinux
+	license = GPL2
+	makedepends = gcc
+	makedepends = make
+	makedepends = autoconf
+	makedepends = automake
+	makedepends = git
+	depends = spl-kmod-dkms-git=0.6.5.68.g576865b
+	provides = spl
+	conflicts = spl-utils
+	conflicts = spl-utils-therp
+	conflicts = spl-utils-therp-git
+	conflicts = spl-utilities
+	source = spl-utilities-git::git+git://github.com/zfsonlinux/spl.git
+	source = spl-utilities.install
+	sha256sums = SKIP
+	sha256sums = aa5f3fd025c05078067acf01cbad82af322b4b8542d2d1c6a9103338eff6729d
+
+pkgname = spl-utilities-git
+
