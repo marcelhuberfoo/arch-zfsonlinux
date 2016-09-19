@@ -1,6 +1,6 @@
 pkgbase = zfs-kmod-dkms-git
 	pkgdesc = Kernel modules for the Zettabyte File System.
-	pkgver = 0.7.0.rc1.21.g9ea9e0b
+	pkgver = 0.7.0.rc1.23.ga34f7ab
 	pkgrel = 1
 	url = http://zfsonlinux.org/
 	install = zfs-kmod-dkms.install
@@ -14,7 +14,7 @@ pkgbase = zfs-kmod-dkms-git
 	makedepends = automake
 	makedepends = git
 	depends = dkms
-	depends = spl-kmod-dkms-git=0.7.0.rc1.2.g49fbac3
+	depends = spl-kmod-dkms-git=0.7.0.rc1.3.gcb81c0c
 	provides = zfs
 	conflicts = zfs-dkms
 	conflicts = zfs-dkms-therp
