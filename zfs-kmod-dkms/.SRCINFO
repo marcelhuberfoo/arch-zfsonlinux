@@ -24,10 +24,12 @@ pkgbase = zfs-kmod-dkms-git
 	source = spl::git+git://github.com/zfsonlinux/spl.git
 	source = zfs-kmod-dkms.install
 	source = dkms.mkconf.patch
+	source = dkms.mkconf.icp.patch
 	sha256sums = SKIP
 	sha256sums = SKIP
 	sha256sums = fb45023e2f14cb70ad6286c0b73b7346d9e348a6e04d716f0eba4cd943e21c31
 	sha256sums = 15f51e42ac2cda0d0f0d26f5c00cb2712c59dcd66684248f22412b878c7a5d29
+	sha256sums = dccb850ab3eef15a98878b51a898490d3e44d394c141b5b098edb1a765a34941
 
 pkgname = zfs-kmod-dkms-git
 
