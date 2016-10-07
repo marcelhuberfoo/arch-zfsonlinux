@@ -3,9 +3,9 @@
 # Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
 
 pkgname=zfs-kmod-dkms-git
-pkgver=0.7.0.rc1.74.ge2c292b
+pkgver=0.7.0.rc1.77.gaf322de
 _pkgverspl=0.7.0.rc1.6.g341dfdb
-pkgrel=2
+pkgrel=1
 pkgdesc='Kernel modules for the Zettabyte File System.'
 arch=(i686 x86_64)
 groups=(zfsonlinux)
@@ -18,13 +18,11 @@ license=(CDDL)
 source=($pkgname::git+git://github.com/zfsonlinux/zfs.git
         spl::git+git://github.com/zfsonlinux/spl.git
         zfs-kmod-dkms.install
-        dkms.mkconf.patch
-        dkms.mkconf.icp.patch)
+        dkms.mkconf.patch)
 sha256sums=('SKIP'
             'SKIP'
             'fb45023e2f14cb70ad6286c0b73b7346d9e348a6e04d716f0eba4cd943e21c31'
-            '15f51e42ac2cda0d0f0d26f5c00cb2712c59dcd66684248f22412b878c7a5d29'
-            'dccb850ab3eef15a98878b51a898490d3e44d394c141b5b098edb1a765a34941')
+            '15f51e42ac2cda0d0f0d26f5c00cb2712c59dcd66684248f22412b878c7a5d29')
 install=zfs-kmod-dkms.install
 
 pkgver() {
@@ -80,7 +78,6 @@ prepare() {
   git clean -dxf 2>/dev/null
   git reset --hard 2>/dev/null
   patch -Np0 -i "$srcdir/dkms.mkconf.patch"
-  patch -Np0 -i "$srcdir/dkms.mkconf.icp.patch"
   _my_replace_META_Version "$(pkgver)" "$srcdir/$pkgname/META"
   _my_replace_META_Version "$(pkgver_spl)" "$srcdir/spl/META"
 }
