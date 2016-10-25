@@ -1,6 +1,6 @@
 pkgbase = zfs-utilities-git
 	pkgdesc = Zettabyte File System management utilities.
-	pkgver = 0.7.0.rc1.144.g24cdeaf
+	pkgver = 0.7.0.rc1.150.g9fa4db4
 	pkgrel = 1
 	url = http://zfsonlinux.org/
 	arch = i686
@@ -13,7 +13,7 @@ pkgbase = zfs-utilities-git
 	makedepends = automake
 	makedepends = git
 	depends = spl-utilities-git=0.7.0.rc1.11.gae7eda1
-	depends = zfs-kmod-dkms-git=0.7.0.rc1.144.g24cdeaf
+	depends = zfs-kmod-dkms-git=0.7.0.rc1.150.g9fa4db4
 	provides = zfs
 	conflicts = zfs-utils
 	conflicts = zfs-utils-therp
