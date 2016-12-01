@@ -14,7 +14,7 @@ pkgbase = zfs-kmod-dkms-git
 	makedepends = automake
 	makedepends = git
 	depends = dkms
-	depends = spl-kmod-dkms-git=0.7.0.rc2.2.gcbba714
+	depends = spl-kmod-dkms-git=0.7.0.rc2.3.g4934925
 	provides = zfs
 	conflicts = zfs-dkms
 	conflicts = zfs-dkms-therp

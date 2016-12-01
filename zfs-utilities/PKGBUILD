@@ -4,7 +4,7 @@
 
 pkgname=zfs-utilities-git
 pkgver=0.7.0.rc2.60.g5f20c14
-_pkgverspl=0.7.0.rc2.2.gcbba714
+_pkgverspl=0.7.0.rc2.3.g4934925
 pkgrel=1
 pkgdesc='Zettabyte File System management utilities.'
 arch=(i686 x86_64)

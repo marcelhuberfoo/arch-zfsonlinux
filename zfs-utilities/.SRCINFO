@@ -12,7 +12,7 @@ pkgbase = zfs-utilities-git
 	makedepends = autoconf
 	makedepends = automake
 	makedepends = git
-	depends = spl-utilities-git=0.7.0.rc2.2.gcbba714
+	depends = spl-utilities-git=0.7.0.rc2.3.g4934925
 	depends = zfs-kmod-dkms-git=0.7.0.rc2.60.g5f20c14
 	provides = zfs
 	conflicts = zfs-utils
