@@ -1,7 +1,7 @@
 pkgbase = zfs-utilities-git
 	pkgdesc = Zettabyte File System management utilities.
 	pkgver = 0.7.0.rc3.142.g09ec770c2
-	pkgrel = 1
+	pkgrel = 2
 	url = http://zfsonlinux.org/
 	arch = i686
 	arch = x86_64
@@ -27,7 +27,7 @@ pkgbase = zfs-utilities-git
 	sha256sums = SKIP
 	sha256sums = SKIP
 	sha256sums = b60214f70ffffb62ffe489cbfabd2e069d14ed2a391fac0e36f914238394b540
-	sha256sums = 8190b69853d9670c6aaf1d14c674598a14c58f8ec359e249a1c3010c0b39d074
+	sha256sums = f9dc81972f353f608b14f4ddf396c94ba27ca7b69a008d055ada43540ae16c1d
 	sha256sums = 080d7efa5beb3140b0bf69fb0d8944d27a3b543565da23febbc11f3ee789748f
 
 pkgname = zfs-utilities-git
