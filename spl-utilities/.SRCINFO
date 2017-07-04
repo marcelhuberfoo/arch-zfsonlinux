@@ -1,6 +1,6 @@
 pkgbase = spl-utilities-git
 	pkgdesc = Solaris Porting Layer splat utility.
-	pkgver = 0.7.0.rc4.4.gac48361
+	pkgver = 0.7.0.rc4.5.g7a35f2b
 	pkgrel = 1
 	url = http://zfsonlinux.org/
 	install = spl-utilities.install
@@ -13,7 +13,7 @@ pkgbase = spl-utilities-git
 	makedepends = autoconf
 	makedepends = automake
 	makedepends = git
-	depends = spl-kmod-dkms-git=0.7.0.rc4.4.gac48361
+	depends = spl-kmod-dkms-git=0.7.0.rc4.5.g7a35f2b
 	provides = spl
 	conflicts = spl-utils
 	conflicts = spl-utils-therp
