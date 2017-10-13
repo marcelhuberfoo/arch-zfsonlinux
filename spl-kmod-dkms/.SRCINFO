@@ -1,6 +1,6 @@
 pkgbase = spl-kmod-dkms-git
 	pkgdesc = Solaris Porting Layer kernel modules.
-	pkgver = 0.7.0.13.ge8474f9
+	pkgver = 0.7.0.16.g0cefc9d
 	pkgrel = 1
 	url = http://zfsonlinux.org/
 	install = spl-kmod-dkms.install
