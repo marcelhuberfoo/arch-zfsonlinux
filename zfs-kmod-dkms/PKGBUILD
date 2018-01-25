@@ -5,7 +5,7 @@
 pkgname=zfs-kmod-dkms-git
 pkgver=0.7.0.255.g6bc4a2376
 _pkgverspl=0.7.0.24.g23602fd
-pkgrel=1
+pkgrel=2
 pkgdesc='Kernel modules for the Zettabyte File System.'
 arch=(i686 x86_64)
 groups=(zfsonlinux)

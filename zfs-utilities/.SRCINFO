@@ -1,7 +1,7 @@
 pkgbase = zfs-utilities-git
 	pkgdesc = Zettabyte File System management utilities.
 	pkgver = 0.7.0.255.g6bc4a2376
-	pkgrel = 1
+	pkgrel = 2
 	url = http://zfsonlinux.org/
 	arch = i686
 	arch = x86_64
