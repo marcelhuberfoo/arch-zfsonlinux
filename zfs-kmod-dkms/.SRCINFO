@@ -1,7 +1,7 @@
 pkgbase = zfs-kmod-dkms-git
 	pkgdesc = Kernel modules for the Zettabyte File System.
-	pkgver = 0.7.0.255.g6bc4a2376
-	pkgrel = 2
+	pkgver = 0.7.0.271.g4c46b99d2
+	pkgrel = 1
 	url = http://zfsonlinux.org/
 	install = zfs-kmod-dkms.install
 	arch = i686
