@@ -11,17 +11,21 @@ groups=(zfsonlinux)
 makedepends=(gcc make autoconf automake git)
 depends=(zfs-kmod-dkms-git=$pkgver)
 provides=(zfs)
+replaces=(spl-utilities-git)
 conflicts=(zfs-utils zfs-utils-therp zfs-utils-therp-git zfs-utilities)
 url='http://zfsonlinux.org/'
 license=(CDDL)
 source=($pkgname::git+git://github.com/zfsonlinux/zfs.git
+        zfs-utilities.install
         zfs-utilities.bash-completion
         zfs-utilities.initcpio.install
         zfs-utilities.initcpio.hook)
 sha256sums=('SKIP'
+            'aa5f3fd025c05078067acf01cbad82af322b4b8542d2d1c6a9103338eff6729d'
             'b60214f70ffffb62ffe489cbfabd2e069d14ed2a391fac0e36f914238394b540'
             '04d9162a7e33dc9c493d5d639f21ff11716572297d872d0ba2cbf2af17be1fea'
             '3eb874cf2cbb6c6a0e1c11a98af54f682d6225667af944b43435aeabafa0112f')
+install=zfs-utilities.install
 
 pkgver() {
   cd "$srcdir/$pkgname" 2>/dev/null && (

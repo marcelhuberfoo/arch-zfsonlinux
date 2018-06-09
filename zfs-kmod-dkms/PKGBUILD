@@ -11,6 +11,7 @@ groups=(zfsonlinux)
 makedepends=(gcc make autoconf automake git)
 depends=(dkms)
 provides=(zfs)
+replaces=(spl-kmod-dkms-git)
 conflicts=(zfs-dkms zfs-dkms-therp zfs-dkms-therp-git zfs-kmod-dkms)
 url='http://zfsonlinux.org/'
 license=(CDDL)

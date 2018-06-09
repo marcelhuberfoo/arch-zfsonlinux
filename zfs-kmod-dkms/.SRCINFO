@@ -19,6 +19,7 @@ pkgbase = zfs-kmod-dkms-git
 	conflicts = zfs-dkms-therp
 	conflicts = zfs-dkms-therp-git
 	conflicts = zfs-kmod-dkms
+	replaces = spl-kmod-dkms-git
 	source = zfs-kmod-dkms-git::git+git://github.com/zfsonlinux/zfs.git
 	source = zfs-kmod-dkms.install
 	sha256sums = SKIP
