@@ -1,6 +1,6 @@
 #!/bin/sh
 
-thedirs="spl-kmod-dkms spl-utilities zfs-kmod-dkms zfs-utilities"
+thedirs="zfs-kmod-dkms zfs-utilities"
 repodir=/home/own-repo
 
 thingsToDo=(
