@@ -25,7 +25,7 @@ pkgbase = zfs-utilities-git
 	sha256sums = SKIP
 	sha256sums = b60214f70ffffb62ffe489cbfabd2e069d14ed2a391fac0e36f914238394b540
 	sha256sums = 04d9162a7e33dc9c493d5d639f21ff11716572297d872d0ba2cbf2af17be1fea
-	sha256sums = 080d7efa5beb3140b0bf69fb0d8944d27a3b543565da23febbc11f3ee789748f
+	sha256sums = 3eb874cf2cbb6c6a0e1c11a98af54f682d6225667af944b43435aeabafa0112f
 
 pkgname = zfs-utilities-git
 
