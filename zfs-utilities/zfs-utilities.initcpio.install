@@ -7,14 +7,14 @@ build() {
         zunicode \
         zcommon \
         zfs \
-        spl \
-        splat
+        spl
 
     map add_binary \
         arcstat.py \
         dbufstat.py \
         fsck.zfs \
         mount.zfs \
+        seq \
         zdb \
         zed \
         zfs \
@@ -23,10 +23,10 @@ build() {
         zpool \
         zstreamdump \
         ztest \
-        splat \
         hostid \
         /lib/udev/vdev_id \
-        /lib/udev/zvol_id
+        /lib/udev/zvol_id \
+        findmnt
 
     map add_file \
         /lib/udev/rules.d/60-zvol.rules \
@@ -70,6 +70,10 @@ Command Line Setup:
 
         If set to 1, this will use "zpool import -f" when attempting to import
         pools.
+
+    To change the seconds of time to wait for ZFS devices to show up at boot:
+
+        zfs_wait=30
 
     To search for devices in a directory other than "/dev":
 

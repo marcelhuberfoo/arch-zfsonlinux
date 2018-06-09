@@ -24,7 +24,7 @@ pkgbase = zfs-utilities-git
 	source = zfs-utilities.initcpio.hook
 	sha256sums = SKIP
 	sha256sums = b60214f70ffffb62ffe489cbfabd2e069d14ed2a391fac0e36f914238394b540
-	sha256sums = 30229c06af6e973419860299d3e0425cc1de7764565403bc41f70274f854f02e
+	sha256sums = 04d9162a7e33dc9c493d5d639f21ff11716572297d872d0ba2cbf2af17be1fea
 	sha256sums = 080d7efa5beb3140b0bf69fb0d8944d27a3b543565da23febbc11f3ee789748f
 
 pkgname = zfs-utilities-git
