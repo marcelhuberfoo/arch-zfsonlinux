@@ -2,65 +2,90 @@
 # Contributor: Jesus Alvarez <jeezusjr at gmail dot com>
 # Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
 
-pkgbase=zfsonlinux-dkms
-pkgname=('spl-utilities' 'spl-kmod-dkms' 'zfs-utilities' 'zfs-kmod-dkms')
-pkgver=0.6.2
-pkgrel=1
-arch=('i686' 'x86_64')
-groups=('zfsonlinux')
-makedepends=('dkms')
-provides=('zfs' 'spl')
-conflicts=('zfs' 'spl')
+pkgbase=zfsonlinux-dkms-git
+pkgname=(zfs-kmod-dkms-git zfs-utilities-git)
+_pkgsource=zfs
+pkgver=0.7.0.1596.g2ffd89fcb
+pkgrel=2
+arch=(x86_64)
+groups=(zfsonlinux)
+makedepends=(gcc make autoconf automake git dkms)
+provides=(zfs)
 url='http://zfsonlinux.org/'
-license=('GPL2' 'CDDL')
-source=(http://archive.zfsonlinux.org/downloads/zfsonlinux/spl/spl-${pkgver}.tar.gz
-        http://archive.zfsonlinux.org/downloads/zfsonlinux/zfs/zfs-${pkgver}.tar.gz
-        shrinker.patch
-        spl-utilities.install
-        spl-kmod-dkms.install
+license=(GPL2 CDDL)
+source=($_pkgsource::git+git://github.com/zfsonlinux/zfs.git
+        zfs-utilities.install
+        zfs-kmod-dkms.install
         zfs-utilities.bash-completion
         zfs-utilities.initcpio.install
-        zfs-utilities.initcpio.hook
-        zfs-utilities.service
-        zfs-kmod-dkms.install)
-sha256sums=('3c577c7055d6c73179726b9c8a7fd48f9122be0b345c50cd54732e801165daa4'
-            '6b8cd79486b3a51204fac07297b8c45aa8702b8dfade58f2098b5734517065a1'
-            '596f5bc1ef30e27a214bfd4962f8d3ed319cd7b4fe9f46b73d8d91d36c22b9e3'
+        zfs-utilities.initcpio.hook)
+sha256sums=('SKIP'
             'aa5f3fd025c05078067acf01cbad82af322b4b8542d2d1c6a9103338eff6729d'
-            'bb72fcab2fdb88aeba7c8d059a8f27fd2d32730f3d824d9303ca71f967bc2464'
-            '15e742477fad0104871fc055b6ce9bf803540070e47fa515ea7ca3c1a401f831'
-            '1ea6d2cdd27798680a96c9ebf18e9167b0575d032c7cfc731f16456cd38f2040'
-            'ab63abbd7fd8cb0a8293651947fda82a1b41d420cbb8e6c71c0fd3884ab43030'
-            'fd0abaf09de5e472cca449439def43f1dbbd13f1c5f4bd0d233f59563de1637a'
-            '07dbd4765f2efae16b1a7781ed10edddc1d8112ad87b7cd17b6cc9736efb14de')
+            '07dbd4765f2efae16b1a7781ed10edddc1d8112ad87b7cd17b6cc9736efb14de'
+            'b60214f70ffffb62ffe489cbfabd2e069d14ed2a391fac0e36f914238394b540'
+            '04d9162a7e33dc9c493d5d639f21ff11716572297d872d0ba2cbf2af17be1fea'
+            '3eb874cf2cbb6c6a0e1c11a98af54f682d6225667af944b43435aeabafa0112f')
+
+pkgver() {
+  cd "$srcdir/$_pkgsource" 2>/dev/null && (
+  # update dependent projects revision information
+  if GITTAG="$(git describe --abbrev=0 --tags 2>/dev/null)"; then
+    local _revs_ahead_tag=$(git rev-list --count ${GITTAG}..)
+    local _commit_id_short=$(git log -1 --format=%h)
+    echo $(sed -e s/^${pkgbase%%-git}// -e 's/^[-_/a-zA-Z]\+//' -e 's/[-_+]/./g' <<< ${GITTAG}).${_revs_ahead_tag}.g${_commit_id_short}
+  else
+    echo 0.$(git rev-list --count master).g$(git log -1 --format=%h)
+  fi
+  ) || echo $pkgver
+}
+
+# $1 version, $2 file
+_my_replace_META_Version() {
+  local _gitver="${1}"
+  local _filename="${2}"
+  # replace Version: and Release: in META files
+  local _version=$(echo $_gitver | sed 's|\.[0-9]*\.[0-9a-fg]*$||')
+  local _release=$(echo $_gitver | sed -r 's|^.*\.([0-9]*\.[0-9a-fg]*)$|\1|')
+  sed -i -r -e "/^Version:/ { s/^([^0-9]*)[0-9.]+\$/\1$_version/ }" "$_filename"
+  sed -i -r -e "/^Release:/ { s/^([^0-9r]*)[0-9a-fgr.]+\$/\1$_release/ }" "$_filename"
+}
 
 prepare() {
-  cd "${srcdir}/spl-${pkgver}"
-  patch -Np1 < ../shrinker.patch
+  cd "$srcdir/$_pkgsource"
+  git clean -dxf 2>/dev/null
+  git reset --hard 2>/dev/null
+  _my_replace_META_Version "$(pkgver)" "$srcdir/$_pkgsource/META"
 }
 
 build() {
-  ## building spl
-  cd "${srcdir}/spl-${pkgver}"
-
+  cd "$srcdir/$_pkgsource"
   ./autogen.sh
-  if [ $CARCH = 'i686' ]; then
-    ./configure --prefix=/usr \
-                --libdir=/usr/lib \
-                --sbindir=/usr/bin \
-                --with-config=user \
-                --enable-atomic-spinlocks
-  elif [ $CARCH = 'x86_64' ]; then
-    ./configure --prefix=/usr \
-                --libdir=/usr/lib \
-                --sbindir=/usr/bin \
-                --with-config=user
-  fi
-  make
+}
 
-  ## building zfs
-  cd "${srcdir}/zfs-${pkgver}"
-  ./autogen.sh
+package_zfs-kmod-dkms-git() {
+  pkgdesc='Kernel modules for the Zettabyte File System.'
+  license=(CDDL)
+  depends=(dkms)
+  replaces=(spl-kmod-dkms-git)
+  conflicts=(zfs-dkms zfs-dkms-therp zfs-dkms-therp-git zfs-kmod-dkms)
+  install=zfs-kmod-dkms.install
+
+  cd "$srcdir/$_pkgsource"
+  scripts/dkms.mkconf -v $pkgver -f dkms.conf -n zfs
+  install -d "$pkgdir/usr/src/zfs-${pkgver}"
+  cp -a -T "$srcdir/$_pkgsource/" "$pkgdir/usr/src/zfs-${pkgver}"
+  rm -rf "$pkgdir/usr/src/zfs-${pkgver}/.git"
+}
+
+package_zfs-utilities-git() {
+  pkgdesc='Zettabyte File System management utilities.'
+  license=(CDDL)
+  depends=(zfs-kmod-dkms-git=${pkgver})
+  replaces=(spl-utilities-git)
+  conflicts=(zfs-utils zfs-utils-therp zfs-utils-therp-git zfs-utilities)
+  install=zfs-utilities.install
+
+  cd "$srcdir/$_pkgsource"
   ./configure --prefix=/usr \
               --sysconfdir=/etc \
               --sbindir=/usr/bin \
@@ -71,83 +96,20 @@ build() {
               --libexecdir=/usr/lib/zfs-${pkgver} \
               --with-config=user
   make
-}
-
-package_spl-kmod-dkms() {
-  pkgdesc='Solaris Porting Layer kernel modules.'
-  license=('GPL2')
-  depends=('dkms')
-  conflicts=('spl-dkms' 'spl-dkms-therp')
-  install=spl-kmod-dkms.install
-
-  cd "${srcdir}/spl-${pkgver}"
-
-  # cleanup source tree
-  make distclean
-
-  ./autogen.sh
-  scripts/dkms.mkconf -v ${pkgver} -f dkms.conf -n spl
-
-  install -d "${pkgdir}/usr/src/spl-${pkgver}"
-  cp -a "${srcdir}/spl-${pkgver}/" "${pkgdir}/usr/src/"
-}
-
-package_spl-utilities() {
-  pkgdesc='Solaris Porting Layer test utility.'
-  license=('GPL2')
-  depends=("spl-kmod-dkms=${pkgver}")
-  conflicts=('spl-utils' 'spl-utils-therp')
-  install=spl-utilities.install
-
-  cd "${srcdir}/spl-${pkgver}"
-  make DESTDIR="${pkgdir}" install
-}
-
-package_zfs-kmod-dkms() {
-  pkgdesc="Kernel modules for the Zettabyte File System."
-  license=('CDDL')
-  depends=('dkms' "spl-kmod-dkms=${pkgver}")
-  conflicts=('zfs-dkms' 'zfs-dkms-therp')
-  install=zfs-kmod-dkms.install
-
-  cd "${srcdir}/zfs-${pkgver}"
-
-  # cleanup source tree
-  make distclean
-
-  ./autogen.sh
-  scripts/dkms.mkconf -v ${pkgver} -f dkms.conf -n zfs
-
-  install -d "${pkgdir}/usr/src/zfs-${pkgver}"
-  cp -a "${srcdir}/zfs-${pkgver}/" "${pkgdir}/usr/src/"
-}
-
-package_zfs-utilities() {
-  pkgdesc="Zettabyte File System management utilities."
-  license=('CDDL')
-  depends=("zfs-kmod-dkms=${pkgver}")
-  optdepends=("spl-utilities=${pkgver}: for executing spl tests")
-  conflicts=('zfs-utils' 'zfs-utils-therp')
-
-  cd "${srcdir}/zfs-${pkgver}"
-  make DESTDIR="${pkgdir}" install
+  make DESTDIR="$pkgdir" install
 
   # Remove uneeded files
-  rm -r "${pkgdir}/etc/init.d"
-  rm -r "${pkgdir}/usr/lib/dracut"
+  rm -r "$pkgdir"/etc/init.d
+  rm -r "$pkgdir"/usr/lib/dracut
 
   # move module tree /lib -> /usr/lib
-  cp -r "${pkgdir}"/{lib,usr}
-  rm -r "${pkgdir}/lib"
+  cp -r "$pkgdir"/{lib,usr}
+  cp "$pkgdir"/sbin/* "$pkgdir"/usr/bin/
+  rm -r "$pkgdir"/{lib,sbin}
 
-  # Fixup path
-  mv "${pkgdir}/sbin/mount.zfs" "${pkgdir}/usr/bin/"
-  rm -r "${pkgdir}/sbin"
-
-  install -D -m644 "${srcdir}/zfs-utilities.initcpio.hook" "${pkgdir}/usr/lib/initcpio/hooks/zfs"
-  install -D -m644 "${srcdir}/zfs-utilities.initcpio.install" "${pkgdir}/usr/lib/initcpio/install/zfs"
-  install -D -m644 "${srcdir}/zfs-utilities.service" "${pkgdir}/usr/lib/systemd/system/zfs.service"
-  install -D -m644 "${srcdir}/zfs-utilities.bash-completion" "${pkgdir}/usr/share/bash-completion/completions/zfs"
+  install -D -m644 "${srcdir}/zfs-utilities.initcpio.hook" "$pkgdir/usr/lib/initcpio/hooks/zfs"
+  install -D -m644 "${srcdir}/zfs-utilities.initcpio.install" "$pkgdir/usr/lib/initcpio/install/zfs"
+  install -D -m644 "${srcdir}/zfs-utilities.bash-completion" "$pkgdir/usr/share/bash-completion/completions/zfs"
 }
 
 # vim:set ts=2 sw=2 et:

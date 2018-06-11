@@ -1,0 +1,50 @@
+pkgbase = zfsonlinux-dkms-git
+	pkgver = 0.7.0.1596.g2ffd89fcb
+	pkgrel = 2
+	url = http://zfsonlinux.org/
+	arch = x86_64
+	groups = zfsonlinux
+	license = GPL2
+	license = CDDL
+	makedepends = gcc
+	makedepends = make
+	makedepends = autoconf
+	makedepends = automake
+	makedepends = git
+	makedepends = dkms
+	provides = zfs
+	source = zfs::git+git://github.com/zfsonlinux/zfs.git
+	source = zfs-utilities.install
+	source = zfs-kmod-dkms.install
+	source = zfs-utilities.bash-completion
+	source = zfs-utilities.initcpio.install
+	source = zfs-utilities.initcpio.hook
+	sha256sums = SKIP
+	sha256sums = aa5f3fd025c05078067acf01cbad82af322b4b8542d2d1c6a9103338eff6729d
+	sha256sums = 07dbd4765f2efae16b1a7781ed10edddc1d8112ad87b7cd17b6cc9736efb14de
+	sha256sums = b60214f70ffffb62ffe489cbfabd2e069d14ed2a391fac0e36f914238394b540
+	sha256sums = 04d9162a7e33dc9c493d5d639f21ff11716572297d872d0ba2cbf2af17be1fea
+	sha256sums = 3eb874cf2cbb6c6a0e1c11a98af54f682d6225667af944b43435aeabafa0112f
+
+pkgname = zfs-kmod-dkms-git
+	pkgdesc = Kernel modules for the Zettabyte File System.
+	install = zfs-kmod-dkms.install
+	license = CDDL
+	depends = dkms
+	conflicts = zfs-dkms
+	conflicts = zfs-dkms-therp
+	conflicts = zfs-dkms-therp-git
+	conflicts = zfs-kmod-dkms
+	replaces = spl-kmod-dkms-git
+
+pkgname = zfs-utilities-git
+	pkgdesc = Zettabyte File System management utilities.
+	install = zfs-utilities.install
+	license = CDDL
+	depends = zfs-kmod-dkms-git=0.7.0.1596.g2ffd89fcb
+	conflicts = zfs-utils
+	conflicts = zfs-utils-therp
+	conflicts = zfs-utils-therp-git
+	conflicts = zfs-utilities
+	replaces = spl-utilities-git
+
