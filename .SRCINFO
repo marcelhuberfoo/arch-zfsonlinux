@@ -1,6 +1,6 @@
 pkgbase = zfsonlinux-dkms-git
-	pkgver = 0.7.0.1596.g2ffd89fcb
-	pkgrel = 2
+	pkgver = 0.7.0.1601.g1fac63e56
+	pkgrel = 1
 	url = http://zfsonlinux.org/
 	arch = x86_64
 	groups = zfsonlinux
@@ -41,7 +41,7 @@ pkgname = zfs-utilities-git
 	pkgdesc = Zettabyte File System management utilities.
 	install = zfs-utilities.install
 	license = CDDL
-	depends = zfs-kmod-dkms-git=0.7.0.1596.g2ffd89fcb
+	depends = zfs-kmod-dkms-git=0.7.0.1601.g1fac63e56
 	conflicts = zfs-utils
 	conflicts = zfs-utils-therp
 	conflicts = zfs-utils-therp-git
