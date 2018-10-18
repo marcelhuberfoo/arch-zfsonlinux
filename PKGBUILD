@@ -5,7 +5,7 @@
 pkgbase=zfsonlinux-dkms-git
 pkgname=(zfs-kmod-dkms-git zfs-utilities-git)
 _pkgsource=zfs
-pkgver=0.8.0.rc1.42.g039169058
+pkgver=0.8.0.rc1.58.g8d4319400
 pkgrel=1
 arch=(x86_64)
 groups=(zfsonlinux)
