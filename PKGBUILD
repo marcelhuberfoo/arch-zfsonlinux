@@ -5,7 +5,7 @@
 pkgbase=zfsonlinux-dkms-git
 pkgname=(zfs-kmod-dkms-git zfs-utilities-git)
 _pkgsource=zfs
-pkgver=0.8.0.rc2.52.gc87db5919
+pkgver=0.8.0.rc2.71.gd611989fd
 pkgrel=1
 arch=(x86_64)
 groups=(zfsonlinux)
@@ -18,13 +18,15 @@ source=($_pkgsource::git+git://github.com/zfsonlinux/zfs.git
         zfs-kmod-dkms.install
         zfs-utilities.bash-completion
         zfs-utilities.initcpio.install
-        zfs-utilities.initcpio.hook)
+        zfs-utilities.initcpio.hook
+        zfs-utilities.initcpio.zfsencryptssh.install)
 sha256sums=('SKIP'
             'aa5f3fd025c05078067acf01cbad82af322b4b8542d2d1c6a9103338eff6729d'
             '07dbd4765f2efae16b1a7781ed10edddc1d8112ad87b7cd17b6cc9736efb14de'
             'b60214f70ffffb62ffe489cbfabd2e069d14ed2a391fac0e36f914238394b540'
-            '04d9162a7e33dc9c493d5d639f21ff11716572297d872d0ba2cbf2af17be1fea'
-            '3eb874cf2cbb6c6a0e1c11a98af54f682d6225667af944b43435aeabafa0112f')
+            '6bc89af16a6d028cec6237d4159b905b053b05e51fc551b5c906ac9ee1766328'
+            '8322441756a8f1b6c039f95eee873f1bcf49a776c393a1e70c2029988ce14aa3'
+            '29080a84e5d7e36e63c4412b98646043724621245b36e5288f5fed6914da5b68')
 
 pkgver() {
   cd "$srcdir/$_pkgsource" 2>/dev/null && (
@@ -65,7 +67,7 @@ build() {
 package_zfs-kmod-dkms-git() {
   pkgdesc='Kernel modules for the Zettabyte File System.'
   license=(CDDL)
-  depends=(dkms)
+  depends=(dkms lsb-release)
   replaces=(spl-kmod-dkms-git)
   conflicts=(zfs-dkms zfs-dkms-therp zfs-dkms-therp-git zfs-kmod-dkms)
   install=zfs-kmod-dkms.install
@@ -80,7 +82,7 @@ package_zfs-kmod-dkms-git() {
 package_zfs-utilities-git() {
   pkgdesc='Zettabyte File System management utilities.'
   license=(CDDL)
-  depends=(zfs-kmod-dkms-git=${pkgver})
+  depends=(zfs-kmod-dkms-git=${pkgver} python)
   replaces=(spl-utilities-git)
   conflicts=(zfs-utils zfs-utils-therp zfs-utils-therp-git zfs-utilities)
   install=zfs-utilities.install
@@ -89,12 +91,14 @@ package_zfs-utilities-git() {
   ./configure --prefix=/usr \
               --sysconfdir=/etc \
               --sbindir=/usr/bin \
+              --with-mounthelperdir=/usr/bin \
               --libdir=/usr/lib \
               --datadir=/usr/share \
               --includedir=/usr/include \
               --with-udevdir=/lib/udev \
               --libexecdir=/usr/lib/zfs-${pkgver} \
-              --with-config=user
+              --with-config=user \
+              --enable-systemd
   make
   make DESTDIR="$pkgdir" install
 
@@ -104,11 +108,11 @@ package_zfs-utilities-git() {
 
   # move module tree /lib -> /usr/lib
   cp -r "$pkgdir"/{lib,usr}
-  cp "$pkgdir"/sbin/* "$pkgdir"/usr/bin/
-  rm -r "$pkgdir"/{lib,sbin}
+  rm -r "$pkgdir"/lib
 
   install -D -m644 "${srcdir}/zfs-utilities.initcpio.hook" "$pkgdir/usr/lib/initcpio/hooks/zfs"
   install -D -m644 "${srcdir}/zfs-utilities.initcpio.install" "$pkgdir/usr/lib/initcpio/install/zfs"
+  install -D -m644 "${srcdir}/zfs-utilities.initcpio.zfsencryptssh.install" "$pkgdir/usr/lib/initcpio/install/zfsencryptssh"
   install -D -m644 "${srcdir}/zfs-utilities.bash-completion" "$pkgdir/usr/share/bash-completion/completions/zfs"
 }
 

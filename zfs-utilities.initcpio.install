@@ -10,8 +10,6 @@ build() {
         spl
 
     map add_binary \
-        arcstat.py \
-        dbufstat.py \
         fsck.zfs \
         mount.zfs \
         seq \
@@ -22,7 +20,6 @@ build() {
         zinject \
         zpool \
         zstreamdump \
-        ztest \
         hostid \
         /lib/udev/vdev_id \
         /lib/udev/zvol_id \
@@ -40,9 +37,9 @@ build() {
     add_runscript
 
     # allow mount(8) to "autodetect" ZFS
-    echo 'zfs' >>"$BUILDROOT/etc/filesystems"
+    echo 'zfs' >>"${BUILDROOT}/etc/filesystems"
 
-    [[ -f /etc/zfs/zpool.cache ]] && add_file "/etc/zfs/zpool.cache"
+    [[ -f /etc/zfs/zpool.cache ]] && cp "/etc/zfs/zpool.cache" "${BUILDROOT}/etc/zfs/zpool.cache.org"
     [[ -f /etc/modprobe.d/zfs.conf ]] && add_file "/etc/modprobe.d/zfs.conf"
     [[ -f /etc/hostid ]] && add_file "/etc/hostid"
 }
